@@ -24,10 +24,10 @@
 	"minimum-stability": "dev",
 	"require": {
 		"php": ">=8.1",
-		"ext-random": "*",
-		"fiveorbs/dev": "dev-main"
+		"ext-random": "*"
 	},
 	"require-dev": {
+		"fiveorbs/dev": "^1.1",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1",
 		"pestphp/pest": "^1",
 		"vimeo/psalm": "^5.5"
