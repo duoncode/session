@@ -1,40 +1,41 @@
 {
-    "name": "conia/session",
-    "description": "Session library",
-    "type": "libary",
-    "license": "MIT",
-    "keywords": [
-        "sessions"
-    ],
-    "autoload": {
-        "psr-4": {
-            "Conia\\Session\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Conia\\Session\\Tests\\": "tests"
-        }
-    },
-    "authors": [
-        {
-            "name": "ebene fünf GmbH"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=8.1",
-        "ext-random": "*"
-    },
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^1",
-        "pestphp/pest": "^1",
-        "vimeo/psalm": "^5.5"
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    }
+	"name": "fiveorbs/session",
+	"description": "Session library",
+	"type": "libary",
+	"license": "MIT",
+	"keywords": [
+		"sessions"
+	],
+	"autoload": {
+		"psr-4": {
+			"FiveOrbs\\Session\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"FiveOrbs\\Session\\Tests\\": "tests"
+		}
+	},
+	"authors": [
+		{
+			"name": "ebene fünf GmbH"
+		}
+	],
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=8.1",
+		"ext-random": "*",
+		"fiveorbs/dev": "dev-main"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1",
+		"pestphp/pest": "^1",
+		"vimeo/psalm": "^5.5"
+	},
+	"config": {
+		"allow-plugins": {
+			"pestphp/pest-plugin": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
 }
