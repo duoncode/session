@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Conia\Session;
+namespace FiveOrbs\Session;
 
-class OutOfBoundsException extends \OutOfBoundsException implements SessionException
-{
-}
+class OutOfBoundsException extends \OutOfBoundsException implements SessionException {}

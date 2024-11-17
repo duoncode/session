@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Conia\Session;
+namespace FiveOrbs\Session;
 
-class RuntimeException extends \RuntimeException implements SessionException
-{
-}
+class RuntimeException extends \RuntimeException implements SessionException {}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Conia\Session\Tests;
+namespace FiveOrbs\Session\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use SessionHandler;
@@ -14,16 +14,16 @@ use SessionHandler;
  */
 class TestCase extends BaseTestCase
 {
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
+	public function __construct(?string $name = null, array $data = [], $dataName = '')
+	{
+		parent::__construct($name, $data, $dataName);
+	}
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+	protected function setUp(): void
+	{
+		parent::setUp();
 
-        session_name('PHPSESSID');
-        session_set_save_handler(new SessionHandler(), true);
-    }
+		session_name('PHPSESSID');
+		session_set_save_handler(new SessionHandler(), true);
+	}
 }
