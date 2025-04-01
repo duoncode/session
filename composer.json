@@ -1,6 +1,6 @@
 {
-	"name": "fiveorbs/session",
-	"description": "Session library",
+	"name": "duon/session",
+	"description": "Duon session library",
 	"type": "libary",
 	"license": "MIT",
 	"keywords": [
@@ -8,12 +8,12 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"FiveOrbs\\Session\\": "src/"
+			"Duon\\Session\\": "src/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"FiveOrbs\\Session\\Tests\\": "tests"
+			"Duon\\Session\\Tests\\": "tests"
 		}
 	},
 	"authors": [
@@ -27,10 +27,10 @@
 		"ext-random": "*"
 	},
 	"require-dev": {
-		"fiveorbs/dev": "^1.1",
+		"duon/dev": "^1.1",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1",
 		"pestphp/pest": "^1",
-		"vimeo/psalm": "^5.5"
+		"vimeo/psalm": "^6.10"
 	},
 	"config": {
 		"allow-plugins": {

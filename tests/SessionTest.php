@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use FiveOrbs\Session\OutOfBoundsException;
-use FiveOrbs\Session\Session;
-use FiveOrbs\Session\Tests\TestCase;
+use Duon\Session\OutOfBoundsException;
+use Duon\Session\Session;
+use Duon\Session\Tests\TestCase;
 
 uses(TestCase::class);
 

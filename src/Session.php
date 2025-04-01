@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Session;
+namespace Duon\Session;
 
-use FiveOrbs\Session\OutOfBoundsException;
-use FiveOrbs\Session\RuntimeException;
+use Duon\Session\OutOfBoundsException;
+use Duon\Session\RuntimeException;
 use SessionHandlerInterface;
 
 /** @psalm-api */
 class Session
 {
-	public const FLASH = 'fiveorbs_flash_messages';
-	public const REMEMBER = 'fiveorbs_remembered_uri';
+	public const FLASH = 'duon_flash_messages';
+	public const REMEMBER = 'duon_remembered_uri';
 
 	public function __construct(
 		protected readonly string $name = '',

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use FiveOrbs\Session\Csrf;
-use FiveOrbs\Session\Session;
+use Duon\Session\Csrf;
+use Duon\Session\Session;
 
 test('Csrf get creates token', function () {
 	$session = new Session();

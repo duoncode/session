@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use FiveOrbs\Session\Session;
-use FiveOrbs\Session\Tests\TestCase;
-use FiveOrbs\Session\Tests\TestSessionHandler;
+use Duon\Session\Session;
+use Duon\Session\Tests\TestCase;
+use Duon\Session\Tests\TestSessionHandler;
 
 uses(TestCase::class);
 

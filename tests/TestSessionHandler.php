@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FiveOrbs\Session\Tests;
+namespace Duon\Session\Tests;
 
 use ErrorException;
 use SessionHandlerInterface;
