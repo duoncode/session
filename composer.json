@@ -3,14 +3,14 @@
 	"description": "Duon session library",
 	"type": "library",
 	"license": "MIT",
-	"homepage": "https://duon.run/session",
+	"homepage": "https://duon.sh/session",
 	"keywords": [
 		"sessions"
 	],
 	"authors": [
 		{
 			"name": "Ernst",
-			"email": "ernst@duon.run"
+			"email": "ernst@duon.sh"
 		}
 	],
 	"autoload": {
