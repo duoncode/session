@@ -43,11 +43,11 @@ class Csrf
 
 		$savedToken = $this->get($page);
 
-		if (empty($savedToken)) {
+		if ($savedToken === '' || $savedToken === '0') {
 			return false;
 		}
 
-		if (is_string($token) && !empty($token)) {
+		if (is_string($token) && $token !== '' && $token !== '0') {
 			return hash_equals($savedToken, $token);
 		}
 
