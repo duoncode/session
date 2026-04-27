@@ -55,6 +55,7 @@ final class SessionTest extends TestCase
 		$this->session->start();
 		$params = session_get_cookie_params();
 
+		self::assertSame('nocache', session_cache_limiter());
 		self::assertTrue($params['httponly']);
 		self::assertSame('Lax', $params['samesite']);
 		self::assertSame('1', ini_get('session.use_only_cookies'));
@@ -64,10 +65,14 @@ final class SessionTest extends TestCase
 
 	public function testSessionOptionsOverrideDefaults(): void
 	{
-		$session = new Session(options: ['cookie_samesite' => 'Strict']);
+		$session = new Session(options: [
+			'cache_limiter' => '',
+			'cookie_samesite' => 'Strict',
+		]);
 		$session->start();
 		$params = session_get_cookie_params();
 
+		self::assertSame('', session_cache_limiter());
 		self::assertTrue($params['httponly']);
 		self::assertSame('Strict', $params['samesite']);
 	}

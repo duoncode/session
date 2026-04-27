@@ -36,7 +36,7 @@ $csrf = new Csrf();
 $token = $csrf->get('profile');
 ```
 
-`Session` merges custom options with secure defaults for HttpOnly cookies, SameSite=Lax, strict session IDs, cookie-only session IDs, and disabled transparent session IDs. Set `cookie_secure` to `true` for HTTPS deployments.
+`Session` merges custom options with secure defaults for HttpOnly cookies, SameSite=Lax, strict session IDs, cookie-only session IDs, disabled transparent session IDs, and PHP's `nocache` session cache limiter. Set `cookie_secure` to `true` for HTTPS deployments.
 
 ## License
 

@@ -26,6 +26,7 @@ $userId = $session->get('user_id');
 
 ```php
 [
+    'cache_limiter' => 'nocache',
     'cookie_httponly' => true,
     'cookie_samesite' => 'Lax',
     'use_only_cookies' => true,
@@ -35,6 +36,8 @@ $userId = $session->get('user_id');
 ```
 
 Set `cookie_secure` to `true` for HTTPS deployments. The library does not enable it by default because it cannot know whether the current request came through a trusted HTTPS proxy.
+
+Set `cache_limiter` to `''` only if your application sends its own cache headers for session-backed responses.
 
 If you pass a custom session handler, `start()` throws when PHP cannot register it.
 

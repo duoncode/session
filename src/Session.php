@@ -13,6 +13,7 @@ class Session
 	public const string REMEMBER = 'duon_remembered_uri';
 
 	private const array DEFAULT_OPTIONS = [
+		'cache_limiter' => 'nocache',
 		'cookie_httponly' => true,
 		'cookie_samesite' => 'Lax',
 		'use_only_cookies' => true,
@@ -53,8 +54,6 @@ class Session
 		if ($this->handler && !session_set_save_handler($this->handler, true)) {
 			throw new RuntimeException('Session handler setup failed');
 		}
-
-		session_cache_limiter('');
 
 		if (!session_start($this->options)) {
 			// session_start() only returns false after PHP accepts the setup but fails internally;
