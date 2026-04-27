@@ -265,7 +265,7 @@ class Session
 				$uri = $rememberedUri['uri'];
 				unset($_SESSION[self::REMEMBER]);
 
-				if (filter_var($uri, FILTER_VALIDATE_URL)) {
+				if (self::isLocalUri($uri)) {
 					return $uri;
 				}
 			}
@@ -274,5 +274,39 @@ class Session
 		}
 
 		return '/';
+	}
+
+	private static function isLocalUri(string $uri): bool
+	{
+		if ($uri === '') {
+			return false;
+		}
+
+		if (!str_starts_with($uri, '/') || str_starts_with($uri, '//')) {
+			return false;
+		}
+
+		$decodedUri = rawurldecode($uri);
+
+		if (preg_match('/[\x00-\x1F\x7F]/', $decodedUri) === 1) {
+			return false;
+		}
+
+		if (str_contains($decodedUri, '\\')) {
+			return false;
+		}
+
+		if (!str_starts_with($decodedUri, '/') || str_starts_with($decodedUri, '//')) {
+			return false;
+		}
+
+		$parts = parse_url($uri);
+
+		return (
+			is_array($parts)
+			&& !array_key_exists('scheme', $parts)
+			&& !array_key_exists('host', $parts)
+			&& array_key_exists('path', $parts)
+		);
 	}
 }

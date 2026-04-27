@@ -164,13 +164,34 @@ final class SessionTest extends TestCase
 
 	public function testRememberUri(): void
 	{
-		$this->session->rememberUri('https://www.example.com/albums');
+		$this->session->rememberUri('/albums?artist=death');
 
-		self::assertSame('https://www.example.com/albums', $this->session->rememberedUri());
+		self::assertSame('/albums?artist=death', $this->session->rememberedUri());
 		self::assertSame('/', $this->session->rememberedUri());
 
-		$this->session->rememberUri('https://www.example.com/albums', -3600);
+		$this->session->rememberUri('/albums', -3600);
 		self::assertSame('/', $this->session->rememberedUri());
+	}
+
+	public function testRememberUriRejectsUnsafeRedirects(): void
+	{
+		foreach ([
+			'',
+			'albums',
+			'https://www.example.com/albums',
+			'ftp://www.example.com/albums',
+			'javascript://%0Aalert(1)',
+			'//www.example.com/albums',
+			'/%2Fwww.example.com/albums',
+			'/\\www.example.com/albums',
+			'/%5Cwww.example.com/albums',
+			"/albums\nLocation: https://www.example.com",
+			'/albums%0ALocation:%20https://www.example.com',
+		] as $uri) {
+			$this->session->rememberUri($uri);
+
+			self::assertSame('/', $this->session->rememberedUri());
+		}
 	}
 
 	public function testSessionRunStartForget(): void

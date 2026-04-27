@@ -71,12 +71,12 @@ Flash messages are escaped with `htmlspecialchars()` when stored.
 ## Remembered URI
 
 ```php
-$session->rememberUri('https://example.com/account');
+$session->rememberUri('/account');
 
 return $session->rememberedUri();
 ```
 
-`rememberedUri()` returns the stored URI once, then removes it. It returns `/` when the URI is expired or not a valid URL. Only store trusted or application-validated redirect targets.
+`rememberedUri()` returns the stored URI once, then removes it. It returns `/` when the URI is expired or not a safe local path. Remembered URIs must start with a single `/`; external URLs are rejected.
 
 ## CSRF tokens
 
