@@ -69,6 +69,18 @@ final class CsrfTest extends TestCase
 		self::assertFalse($csrf->verify());
 	}
 
+	public function testCsrfVerifyEmptyToken(): void
+	{
+		$csrf = new Csrf();
+		$csrf->get();
+
+		$_POST['csrftoken'] = '';
+		self::assertFalse($csrf->verify());
+
+		$_POST['csrftoken'] = '0';
+		self::assertFalse($csrf->verify());
+	}
+
 	public function testCsrfVerifyTokenNull(): void
 	{
 		$csrf = new Csrf();

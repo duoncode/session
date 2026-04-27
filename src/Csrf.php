@@ -32,17 +32,13 @@ class Csrf
 		#[\SensitiveParameter]
 		?string $token = null,
 	): bool {
-		if ($token === null) {
-			$token = $_POST[$this->postKey] ?? null;
+		$token ??= $_POST[$this->postKey] ?? $_SERVER[$this->headerKey] ?? null;
+
+		if (!is_string($token)) {
+			return false;
 		}
 
-		if ($token === null) {
-			if (($_SERVER[$this->headerKey] ?? null) !== null) {
-				$token = $_SERVER[$this->headerKey];
-			}
-		}
-
-		if ($token === null) {
+		if (hash_equals('', $token) || hash_equals('0', $token)) {
 			return false;
 		}
 
@@ -52,11 +48,7 @@ class Csrf
 			return false;
 		}
 
-		if (is_string($token) && !hash_equals('', $token) && !hash_equals('0', $token)) {
-			return hash_equals($savedToken, $token);
-		}
-
-		return false;
+		return hash_equals($savedToken, $token);
 	}
 
 	protected function set(string $page = 'default'): string
