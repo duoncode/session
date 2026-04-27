@@ -29,27 +29,32 @@ class Session
 	/** @psalm-suppress UnusedProperty Used by the $uri property hook. */
 	private ?Uri $uriInstance = null;
 
+	/** @psalm-suppress UnusedProperty Used by helper property hooks. */
+	private readonly Contract\Helpers $helpers;
+
 	/** @psalm-suppress PropertyNotSetInConstructor Virtual property backed by a get hook. */
 	public Flash $flash {
-		get => $this->flashInstance ??= new Flash($this);
+		get => $this->flashInstance ??= $this->helpers->flash($this);
 	}
 
 	/** @psalm-suppress PropertyNotSetInConstructor Virtual property backed by a get hook. */
 	public Csrf $csrf {
-		get => $this->csrfInstance ??= new Csrf($this);
+		get => $this->csrfInstance ??= $this->helpers->csrf($this);
 	}
 
 	/** @psalm-suppress PropertyNotSetInConstructor Virtual property backed by a get hook. */
 	public Uri $uri {
-		get => $this->uriInstance ??= new Uri($this);
+		get => $this->uriInstance ??= $this->helpers->uri($this);
 	}
 
 	public function __construct(
 		protected readonly string $name = '',
 		array $options = [],
 		protected readonly ?SessionHandlerInterface $handler = null,
+		Contract\Helpers $helpers = new Helpers(),
 	) {
 		$this->options = array_replace(self::DEFAULT_OPTIONS, $options);
+		$this->helpers = $helpers;
 	}
 
 	public function start(): void

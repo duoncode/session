@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Session\Tests;
 
+use Duon\Session\Contract\Helpers as HelpersContract;
 use Duon\Session\Csrf;
 use Duon\Session\Flash;
 use Duon\Session\OutOfBoundsException;
@@ -172,6 +173,40 @@ final class SessionTest extends TestCase
 	{
 		self::assertInstanceOf(Uri::class, $this->session->uri);
 		self::assertSame($this->session->uri, $this->session->uri);
+	}
+
+	public function testSessionUsesCustomHelpers(): void
+	{
+		$session = new Session(helpers: new class implements HelpersContract {
+			#[\Override]
+			public function flash(Session $session): Flash
+			{
+				return new Flash($session, key: 'flashes');
+			}
+
+			#[\Override]
+			public function csrf(Session $session): Csrf
+			{
+				return new Csrf($session, key: 'tokens');
+			}
+
+			#[\Override]
+			public function uri(Session $session): Uri
+			{
+				return new Uri($session, key: 'return_to');
+			}
+		});
+		$session->start();
+
+		$session->flash->add('Saved.');
+		$session->csrf->token();
+		$session->uri->remember('/account');
+
+		self::assertTrue($session->has('flashes'));
+		self::assertTrue($session->has('tokens'));
+		self::assertTrue($session->has('return_to'));
+
+		$session->destroy();
 	}
 
 	public function testSessionRunStartDestroy(): void

@@ -14,7 +14,7 @@ class Csrf
 	 */
 	public function __construct(
 		private readonly Session $session,
-		private readonly string $key = 'csrf_tokens',
+		private readonly string $key = 'duon_csrf_tokens',
 		private readonly string $field = '_token',
 		private readonly string $header = 'X-CSRF-Token',
 	) {

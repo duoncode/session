@@ -45,6 +45,38 @@ Call `$session->regenerate()` after `start()` when a user logs in or changes pri
 
 Call `$session->close()` after your last session read or write to write the current session data and close the active session for the current request. This releases PHP's session lock early, which helps long-running requests, downloads, and streamed responses avoid blocking other requests from the same session. Start the session again before accessing session data after `close()`.
 
+## Custom helpers
+
+`$session->flash`, `$session->csrf`, and `$session->uri` are created lazily through `Duon\Session\Contract\Helpers`. Pass a custom implementation when you need custom helper classes or storage keys:
+
+```php
+use Duon\Session\Contract\Helpers as HelpersContract;
+use Duon\Session\Csrf;
+use Duon\Session\Flash;
+use Duon\Session\Session;
+use Duon\Session\Uri;
+
+final class AppHelpers implements HelpersContract
+{
+    public function flash(Session $session): Flash
+    {
+        return new Flash($session, key: 'app_flashes');
+    }
+
+    public function csrf(Session $session): Csrf
+    {
+        return new Csrf($session, key: 'app_csrf_tokens');
+    }
+
+    public function uri(Session $session): Uri
+    {
+        return new Uri($session, key: 'return_to');
+    }
+}
+
+$session = new Session(helpers: new AppHelpers());
+```
+
 ## Session data
 
 ```php
@@ -139,7 +171,7 @@ $session->csrf->remove('contact');
 ```php
 $csrf = new Csrf(
     $session,
-    key: 'csrf_tokens',
+    key: 'duon_csrf_tokens',
     field: '_token',
     header: 'X-CSRF-Token',
 );

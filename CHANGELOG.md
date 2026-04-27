@@ -4,6 +4,7 @@
 
 ### Added
 
+- `Contract\Helpers` and `Helpers` for customizing session helper instances.
 - `Session::$uri` property for remembered URI access.
 - `Csrf::refresh()` and `Csrf::remove()` helpers.
 - `Session::$csrf` property for CSRF token access.
@@ -16,7 +17,7 @@
 
 ### Breaking
 
-- CSRF now uses `csrf_tokens`, `_token`, and `X-CSRF-Token` as default storage key, form field, and header names.
+- CSRF now uses `duon_csrf_tokens`, `_token`, and `X-CSRF-Token` as default storage key, form field, and header names.
 - Remembered URIs now use `$session->uri->remember()` and `$session->uri->pull()` instead of direct `Session` methods.
 - CSRF tokens now use `$session->csrf->token()` or `new Csrf($session)` instead of `new Csrf()` and `Csrf::get()`.
 - Flash messages now use `$session->flash->add()`, `$session->flash->pop()`, and `$session->flash->has()` instead of direct `Session` methods.
