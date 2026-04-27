@@ -25,6 +25,11 @@ namespace Duon\Session {
 	{
 		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionRegenerateIdResult($deleteOldSession);
 	}
+
+	function session_write_close(): bool
+	{
+		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionWriteCloseResult();
+	}
 }
 
 namespace Duon\Session\Tests {
@@ -36,6 +41,7 @@ namespace Duon\Session\Tests {
 		private static bool $forceNameFalse = false;
 		private static bool $forceIdFalse = false;
 		private static bool $forceRegenerateIdFalse = false;
+		private static bool $forceWriteCloseFalse = false;
 
 		public static function sessionNameResult(): string|false
 		{
@@ -64,11 +70,21 @@ namespace Duon\Session\Tests {
 			return \session_regenerate_id((bool) $deleteOldSession);
 		}
 
+		public static function sessionWriteCloseResult(): bool
+		{
+			if (self::$forceWriteCloseFalse) {
+				return false;
+			}
+
+			return \session_write_close();
+		}
+
 		protected function tearDown(): void
 		{
 			self::$forceNameFalse = false;
 			self::$forceIdFalse = false;
 			self::$forceRegenerateIdFalse = false;
+			self::$forceWriteCloseFalse = false;
 
 			if (session_status() === PHP_SESSION_ACTIVE) {
 				session_unset();
@@ -110,6 +126,18 @@ namespace Duon\Session\Tests {
 			$this->expectExceptionMessage('Session id regeneration failed');
 
 			$session->regenerate();
+		}
+
+		public function testCloseThrowsWhenWriteCloseFails(): void
+		{
+			$session = new Session();
+			$session->start();
+			self::$forceWriteCloseFalse = true;
+
+			$this->expectException(RuntimeException::class);
+			$this->expectExceptionMessage('Session close failed');
+
+			$session->close();
 		}
 	}
 }

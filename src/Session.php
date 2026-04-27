@@ -139,6 +139,8 @@ class Session
 	/** @psalm-param non-empty-string $key */
 	public function get(string $key, mixed $default = null): mixed
 	{
+		$this->assertActive();
+
 		if ($this->has($key)) {
 			return $_SESSION[$key];
 		}
@@ -182,9 +184,7 @@ class Session
 	 * */
 	public function set(string $key, mixed $value): void
 	{
-		if (!$this->active()) {
-			throw new RuntimeException('Session not started');
-		}
+		$this->assertActive();
 
 		$_SESSION[$key] = $value;
 	}
@@ -192,6 +192,8 @@ class Session
 	/** @psalm-param non-empty-string $key */
 	public function has(string $key): bool
 	{
+		$this->assertActive();
+
 		return ($_SESSION[$key] ?? null) !== null;
 	}
 
@@ -208,11 +210,18 @@ class Session
 		return session_status() === PHP_SESSION_ACTIVE;
 	}
 
+	public function close(): void
+	{
+		$this->assertActive();
+
+		if (!session_write_close()) {
+			throw new RuntimeException('Session close failed');
+		}
+	}
+
 	public function regenerate(): void
 	{
-		if (!$this->active()) {
-			throw new RuntimeException('Session not started');
-		}
+		$this->assertActive();
 
 		if (!session_regenerate_id(true)) {
 			throw new RuntimeException('Session id regeneration failed');
@@ -223,9 +232,7 @@ class Session
 		string $message,
 		string $queue = 'default',
 	): void {
-		if (!$this->active()) {
-			throw new RuntimeException('Session not started');
-		}
+		$this->assertActive();
 
 		if (array_key_exists(self::FLASH, $_SESSION ?? []) && is_array($_SESSION[self::FLASH])) {
 			$_SESSION[self::FLASH][] = [
@@ -244,6 +251,8 @@ class Session
 
 	public function popFlashes(?string $queue = null): array
 	{
+		$this->assertActive();
+
 		if ($queue === null) {
 			$flashes = $_SESSION[self::FLASH];
 			assert(is_array($flashes), 'Flash storage must be an array.');
@@ -284,6 +293,8 @@ class Session
 
 	public function hasFlashes(?string $queue = null): bool
 	{
+		$this->assertActive();
+
 		/** @var array */
 		$messages = $_SESSION[self::FLASH] ?? [];
 
@@ -303,6 +314,8 @@ class Session
 		string $uri,
 		int $expires = 3600,
 	): void {
+		$this->assertActive();
+
 		$rememberedUri = [
 			'uri' => $uri,
 			'expires' => time() + $expires,
@@ -312,6 +325,8 @@ class Session
 
 	public function rememberedUri(): string
 	{
+		$this->assertActive();
+
 		/** @var null|array{uri: string, expires: int} */
 		$rememberedUri = $_SESSION[self::REMEMBER] ?? null;
 

@@ -43,6 +43,8 @@ If you pass a custom session handler, `start()` throws when PHP cannot register 
 
 Call `$session->regenerate()` after `start()` when a user logs in or changes privileges. Call `$session->forget()` on logout.
 
+Call `$session->close()` after your last session read or write to write the current session data and close the active session for the current request. This releases PHP's session lock early, which helps long-running requests, downloads, and streamed responses avoid blocking other requests from the same session. Start the session again before accessing session data after `close()`.
+
 ## Session data
 
 ```php

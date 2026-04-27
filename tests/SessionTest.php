@@ -134,6 +134,8 @@ final class SessionTest extends TestCase
 
 	public function testSessionThrowsWhenMissing(): void
 	{
+		$this->session->start();
+
 		$this->expectException(OutOfBoundsException::class);
 		$this->expectExceptionMessage(
 			"The session key 'To exist in this world may be a mistake' does not exist",
@@ -144,6 +146,8 @@ final class SessionTest extends TestCase
 
 	public function testSessionGetDefault(): void
 	{
+		$this->session->start();
+
 		self::assertSame('Rozz', $this->session->get('Rick', 'Rozz'));
 	}
 
@@ -195,6 +199,7 @@ final class SessionTest extends TestCase
 
 	public function testPopFlashesQueueReturnsEmptyWhenUnset(): void
 	{
+		$this->session->start();
 		unset($_SESSION[Session::FLASH]);
 
 		$flashes = $this->session->popFlashes('error');
@@ -213,6 +218,7 @@ final class SessionTest extends TestCase
 
 	public function testRememberUri(): void
 	{
+		$this->session->start();
 		$this->session->rememberUri('/albums?artist=death');
 
 		self::assertSame('/albums?artist=death', $this->session->rememberedUri());
@@ -224,6 +230,8 @@ final class SessionTest extends TestCase
 
 	public function testRememberUriRejectsUnsafeRedirects(): void
 	{
+		$this->session->start();
+
 		foreach ([
 			'',
 			'albums',
@@ -252,7 +260,39 @@ final class SessionTest extends TestCase
 
 		$this->session->forget();
 
-		self::assertFalse($this->session->has('Chuck'));
+		self::assertFalse($this->session->active());
+	}
+
+	public function testCloseWritesAndEndsSession(): void
+	{
+		$this->session->start();
+		$this->session->set('Chuck', 'Schuldiner');
+		$this->session->close();
+
+		self::assertFalse($this->session->active());
+
+		$this->session->start();
+		self::assertSame('Schuldiner', $this->session->get('Chuck'));
+	}
+
+	public function testGetFailsAfterClose(): void
+	{
+		$this->session->start();
+		$this->session->set('Chuck', 'Schuldiner');
+		$this->session->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Session not started');
+
+		$this->session->get('Chuck');
+	}
+
+	public function testCloseFailsWhenUninitialized(): void
+	{
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Session not started');
+
+		$this->session->close();
 	}
 
 	public function testRegenerateFailsWhenUninitialized(): void
