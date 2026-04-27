@@ -8,30 +8,35 @@
 
 Helper classes for native PHP sessions and CSRF.
 
-## Usage
+## Installation
+
+```bash
+composer require duon/session
+```
+
+## Documentation
+
+Start here: [docs/index.md](docs/index.md).
+
+## Quick start
 
 ```php
+use Duon\Session\Csrf;
 use Duon\Session\Session;
 
 $session = new Session(options: [
     'cookie_secure' => true,
 ]);
 $session->start();
+
+$session->set('user_id', 123);
+$userId = $session->get('user_id');
+
+$csrf = new Csrf();
+$token = $csrf->get('profile');
 ```
 
-`Session` passes its options to `session_start()` and merges custom options with these defaults:
-
-```php
-[
-    'cookie_httponly' => true,
-    'cookie_samesite' => 'Lax',
-    'use_only_cookies' => true,
-    'use_strict_mode' => true,
-    'use_trans_sid' => false,
-]
-```
-
-Set `cookie_secure` to `true` for HTTPS deployments. It is not enabled by default because the library cannot know whether the current request came through a trusted HTTPS proxy.
+`Session` merges custom options with secure defaults for HttpOnly cookies, SameSite=Lax, strict session IDs, cookie-only session IDs, and disabled transparent session IDs. Set `cookie_secure` to `true` for HTTPS deployments.
 
 ## License
 

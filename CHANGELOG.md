@@ -5,6 +5,7 @@
 ### Added
 
 - Secure default options for native PHP sessions.
+- Package documentation.
 
 ## [0.1.0](https://github.com/duoncode/session/releases/tag/0.1.0) (2026-01-31)
 
