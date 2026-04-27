@@ -189,20 +189,18 @@ class Session
 			}
 
 			$flashMessages = $_SESSION[self::FLASH];
-			$key = 0;
 			$keys = [];
 			$flashes = [];
 
-			foreach ($flashMessages as $flash) {
-				assert(($flash['queue'] ?? null) !== null, 'Flash queue must exist.');
-				assert(($flash['message'] ?? null) !== null, 'Flash message must exist.');
+			foreach (array_keys($flashMessages) as $key) {
+				assert(is_array($flashMessages[$key]), 'Flash entry must be an array.');
+				assert(($flashMessages[$key]['queue'] ?? null) !== null, 'Flash queue must exist.');
+				assert(($flashMessages[$key]['message'] ?? null) !== null, 'Flash message must exist.');
 
-				if ($flash['queue'] === $queue) {
-					$flashes[] = $flash;
+				if ($flashMessages[$key]['queue'] === $queue) {
+					$flashes[] = $flashMessages[$key];
 					$keys[] = $key;
 				}
-
-				$key++;
 			}
 
 			foreach (array_reverse($keys) as $key) {
