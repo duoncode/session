@@ -13,7 +13,7 @@ composer require duon/session
 ```php
 use Duon\Session\Session;
 
-$session = new Session(options: [
+$session = new Session([
     'cookie_secure' => true,
 ]);
 $session->start();

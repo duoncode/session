@@ -44,7 +44,7 @@ namespace Duon\Session\Tests {
 		public function testCustomHandler(): void
 		{
 			$handler = new TestSessionHandler();
-			$session = new Session('custom', handler: $handler);
+			$session = new Session(name: 'custom', handler: $handler);
 			$session->start();
 			$session->set('test', 'value');
 

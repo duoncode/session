@@ -48,8 +48,8 @@ class Session
 	}
 
 	public function __construct(
-		protected readonly string $name = '',
 		array $options = [],
+		protected readonly string $name = '',
 		protected readonly ?SessionHandlerInterface $handler = null,
 		Contract\Helpers $helpers = new Helpers(),
 	) {

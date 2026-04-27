@@ -10,7 +10,7 @@ final class NameTest extends TestCase
 {
 	public function testNamedSession(): void
 	{
-		$session = new Session('test');
+		$session = new Session(name: 'test');
 		$session->start();
 
 		self::assertSame('test', $session->name());

@@ -17,6 +17,7 @@
 
 ### Breaking
 
+- `Session` constructor arguments are now ordered as `$options`, `$name`, `$handler`, `$helpers`.
 - CSRF now uses `duon_csrf_tokens`, `_token`, and `X-CSRF-Token` as default storage key, form field, and header names.
 - Remembered URIs now use `$session->uri->remember()` and `$session->uri->pull()` instead of direct `Session` methods.
 - CSRF tokens now use `$session->csrf->token()` or `new Csrf($session)` instead of `new Csrf()` and `Csrf::get()`.

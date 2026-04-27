@@ -23,7 +23,7 @@ Start here: [docs/index.md](docs/index.md).
 ```php
 use Duon\Session\Session;
 
-$session = new Session(options: [
+$session = new Session([
     'cookie_secure' => true,
 ]);
 $session->start();
