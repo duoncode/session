@@ -118,7 +118,7 @@ $token = $session->csrf->token('contact');
 Use the token in a form:
 
 ```php
-<input type="hidden" name="csrftoken" value="<?= htmlspecialchars($token) ?>">
+<input type="hidden" name="_token" value="<?= htmlspecialchars($token) ?>">
 ```
 
 Verify submitted tokens on unsafe requests:
@@ -134,4 +134,15 @@ $session->csrf->remove('contact');
 
 `refresh()` replaces a token and returns the new value. `remove()` deletes the token for a page.
 
-`Csrf` can also be used directly with `new Csrf($session)`. `verify()` reads the token from the explicit argument, `$_POST['csrftoken']`, or the `HTTP_X_CSRF_TOKEN` server value.
+`Csrf` can also be used directly with custom names:
+
+```php
+$csrf = new Csrf(
+    $session,
+    key: 'csrf_tokens',
+    field: '_token',
+    header: 'X-CSRF-Token',
+);
+```
+
+`verify()` reads the token from the explicit argument, `$_POST['_token']`, or the `X-CSRF-Token` request header.

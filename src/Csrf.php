@@ -8,15 +8,15 @@ namespace Duon\Session;
 class Csrf
 {
 	/**
-	 * @param non-empty-string $sessionKey
-	 * @param non-empty-string $postKey
-	 * @param non-empty-string $headerKey
+	 * @param non-empty-string $key
+	 * @param non-empty-string $field
+	 * @param non-empty-string $header
 	 */
 	public function __construct(
 		private readonly Session $session,
-		private readonly string $sessionKey = 'csrftokens',
-		private readonly string $postKey = 'csrftoken',
-		private readonly string $headerKey = 'HTTP_X_CSRF_TOKEN',
+		private readonly string $key = 'csrf_tokens',
+		private readonly string $field = '_token',
+		private readonly string $header = 'X-CSRF-Token',
 	) {
 		$this->initStorage();
 	}
@@ -42,7 +42,7 @@ class Csrf
 	{
 		$tokens = $this->tokens();
 		unset($tokens[$page]);
-		$this->session->set($this->sessionKey, $tokens);
+		$this->session->set($this->key, $tokens);
 	}
 
 	public function verify(
@@ -50,7 +50,7 @@ class Csrf
 		#[\SensitiveParameter]
 		?string $token = null,
 	): bool {
-		$token ??= $_POST[$this->postKey] ?? $_SERVER[$this->headerKey] ?? null;
+		$token ??= $_POST[$this->field] ?? $_SERVER[$this->serverHeader()] ?? null;
 
 		if (!is_string($token)) {
 			return false;
@@ -74,7 +74,7 @@ class Csrf
 		$tokens = $this->tokens();
 		$token = base64_encode(random_bytes(32));
 		$tokens[$page] = $token;
-		$this->session->set($this->sessionKey, $tokens);
+		$this->session->set($this->key, $tokens);
 
 		return $token;
 	}
@@ -89,8 +89,8 @@ class Csrf
 
 	private function initStorage(): void
 	{
-		if (!$this->session->has($this->sessionKey)) {
-			$this->session->set($this->sessionKey, []);
+		if (!$this->session->has($this->key)) {
+			$this->session->set($this->key, []);
 		}
 	}
 
@@ -98,7 +98,7 @@ class Csrf
 	private function tokens(): array
 	{
 		/** @psalm-suppress MixedAssignment */
-		$tokens = $this->session->get($this->sessionKey, []);
+		$tokens = $this->session->get($this->key, []);
 
 		if (!is_array($tokens)) {
 			return [];
@@ -114,5 +114,17 @@ class Csrf
 		}
 
 		return $valid;
+	}
+
+	/** @return non-empty-string */
+	private function serverHeader(): string
+	{
+		$header = strtoupper(strtr($this->header, '-', '_'));
+
+		if (str_starts_with($header, 'HTTP_')) {
+			return $header;
+		}
+
+		return 'HTTP_' . $header;
 	}
 }

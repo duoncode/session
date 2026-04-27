@@ -22,7 +22,16 @@ final class CsrfTest extends TestCase
 
 	protected function tearDown(): void
 	{
-		unset($_POST['csrftoken'], $_SERVER['HTTP_X_CSRF_TOKEN'], $_SESSION['csrftokens']);
+		unset(
+			$_POST['_token'],
+			$_POST['csrf'],
+			$_SERVER['HTTP_X_CSRF_TOKEN'],
+			$_SERVER['HTTP_X_APP_CSRF'],
+			$_SERVER['HTTP_X_SERVER_CSRF'],
+			$_SESSION['csrf_tokens'],
+			$_SESSION['tokens'],
+			$_SESSION['server_tokens'],
+		);
 
 		if ($this->session->active()) {
 			$this->session->destroy();
@@ -37,7 +46,7 @@ final class CsrfTest extends TestCase
 		$token = $csrf->token();
 
 		self::assertSame(44, strlen($token));
-		self::assertSame($token, $this->session->get('csrftokens')['default']);
+		self::assertSame($token, $this->session->get('csrf_tokens')['default']);
 	}
 
 	public function testCsrfTokenReturnsExistingToken(): void
@@ -51,11 +60,11 @@ final class CsrfTest extends TestCase
 	public function testCsrfTokenReplacesInvalidStorage(): void
 	{
 		$csrf = new Csrf($this->session);
-		$this->session->set('csrftokens', 'invalid');
+		$this->session->set('csrf_tokens', 'invalid');
 
 		$token = $csrf->token();
 
-		self::assertSame($token, $this->session->get('csrftokens')['default']);
+		self::assertSame($token, $this->session->get('csrf_tokens')['default']);
 	}
 
 	public function testCsrfRequiresActiveSession(): void
@@ -90,7 +99,7 @@ final class CsrfTest extends TestCase
 		$csrf->remove('albums');
 
 		self::assertFalse($csrf->verify('albums', $token));
-		self::assertArrayNotHasKey('albums', $this->session->get('csrftokens'));
+		self::assertArrayNotHasKey('albums', $this->session->get('csrf_tokens'));
 	}
 
 	public function testCsrfVerifyPost(): void
@@ -98,11 +107,11 @@ final class CsrfTest extends TestCase
 		$csrf = new Csrf($this->session);
 		$token = $csrf->token();
 
-		$_POST['csrftoken'] = $token;
+		$_POST['_token'] = $token;
 
 		self::assertTrue($csrf->verify());
 
-		$_POST['csrftoken'] = 'empty words';
+		$_POST['_token'] = 'empty words';
 
 		self::assertFalse($csrf->verify());
 	}
@@ -125,13 +134,43 @@ final class CsrfTest extends TestCase
 		self::assertFalse($csrf->verify());
 	}
 
+	public function testCsrfCustomKeys(): void
+	{
+		$csrf = new Csrf(
+			$this->session,
+			key: 'tokens',
+			field: 'csrf',
+			header: 'X-App-CSRF',
+		);
+		$token = $csrf->token();
+
+		self::assertSame($token, $this->session->get('tokens')['default']);
+
+		$_POST['csrf'] = $token;
+		self::assertTrue($csrf->verify());
+
+		unset($_POST['csrf']);
+		$_SERVER['HTTP_X_APP_CSRF'] = $token;
+		self::assertTrue($csrf->verify());
+
+		$serverKeyCsrf = new Csrf(
+			$this->session,
+			key: 'server_tokens',
+			header: 'HTTP_X_SERVER_CSRF',
+		);
+		$serverToken = $serverKeyCsrf->token();
+
+		$_SERVER['HTTP_X_SERVER_CSRF'] = $serverToken;
+		self::assertTrue($serverKeyCsrf->verify());
+	}
+
 	public function testCsrfVerifyEmptySession(): void
 	{
 		$csrf = new Csrf($this->session);
 		$token = $csrf->token();
 
 		$_SERVER['HTTP_X_CSRF_TOKEN'] = $token;
-		$_SESSION['csrftokens']['default'] = '';
+		$_SESSION['csrf_tokens']['default'] = '';
 
 		self::assertFalse($csrf->verify());
 	}
@@ -141,10 +180,10 @@ final class CsrfTest extends TestCase
 		$csrf = new Csrf($this->session);
 		$csrf->token();
 
-		$_POST['csrftoken'] = '';
+		$_POST['_token'] = '';
 		self::assertFalse($csrf->verify());
 
-		$_POST['csrftoken'] = '0';
+		$_POST['_token'] = '0';
 		self::assertFalse($csrf->verify());
 	}
 
@@ -160,7 +199,7 @@ final class CsrfTest extends TestCase
 		$csrf = new Csrf($this->session);
 
 		self::assertFalse($csrf->verify('missing', 'submitted'));
-		self::assertArrayNotHasKey('missing', $_SESSION['csrftokens']);
+		self::assertArrayNotHasKey('missing', $_SESSION['csrf_tokens']);
 	}
 
 	public function testCsrfTokenVerifyDifferentPage(): void
@@ -169,12 +208,12 @@ final class CsrfTest extends TestCase
 		$tokenDefault = $csrf->token();
 		$tokenAlbums = $csrf->token('albums');
 
-		$_POST['csrftoken'] = $tokenDefault;
+		$_POST['_token'] = $tokenDefault;
 
 		self::assertTrue($csrf->verify());
 		self::assertFalse($csrf->verify('albums'));
 
-		$_POST['csrftoken'] = $tokenAlbums;
+		$_POST['_token'] = $tokenAlbums;
 
 		self::assertFalse($csrf->verify());
 		self::assertTrue($csrf->verify('albums'));
