@@ -52,7 +52,7 @@ namespace Duon\Session\Tests {
 			self::assertSame('value', $session->get('test'));
 			self::assertTrue($handler->visited);
 
-			$session->forget();
+			$session->destroy();
 		}
 
 		public function testCustomHandlerSetupFailureThrows(): void

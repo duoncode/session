@@ -11,6 +11,7 @@
 
 ### Breaking
 
+- `Session::forget()` has been replaced with `Session::destroy()`.
 - Remembered URI redirects now only return safe local paths.
 - Session ID regeneration now throws when the session is inactive or regeneration fails.
 - Custom session handler registration now throws when setup fails.

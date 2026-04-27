@@ -25,7 +25,7 @@ final class CsrfTest extends TestCase
 		unset($_POST['csrftoken'], $_SERVER['HTTP_X_CSRF_TOKEN'], $_SESSION['csrftokens']);
 
 		if ($this->session->active()) {
-			$this->session->forget();
+			$this->session->destroy();
 		}
 
 		parent::tearDown();
@@ -42,7 +42,7 @@ final class CsrfTest extends TestCase
 
 	public function testCsrfRequiresActiveSession(): void
 	{
-		$this->session->forget();
+		$this->session->destroy();
 
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Session not started');

@@ -62,13 +62,12 @@ class Session
 		}
 	}
 
-	public function forget(): void
+	public function destroy(): void
 	{
-		// Unset all of the session variables.
-		session_unset(); // same as $_SESSION = [];
+		$this->assertActive();
 
-		// If it's desired to kill the session, also delete the session cookie.
-		// Note: This will destroy the session, and not just the session data!
+		session_unset();
+
 		$useCookies = ini_get('session.use_cookies');
 		if ($useCookies === '1') {
 			$params = session_get_cookie_params();
@@ -94,8 +93,9 @@ class Session
 			}
 		}
 
-		// Finally, destroy the session.
-		session_destroy();
+		if (!session_destroy()) {
+			throw new RuntimeException('Session destroy failed');
+		}
 	}
 
 	public function name(): string

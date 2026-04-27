@@ -15,7 +15,7 @@ final class NameTest extends TestCase
 
 		self::assertSame('test', $session->name());
 
-		$session->forget();
+		$session->destroy();
 	}
 
 	public function testUnnamedSession(): void
@@ -25,6 +25,6 @@ final class NameTest extends TestCase
 
 		self::assertSame('PHPSESSID', $session->name());
 
-		$session->forget();
+		$session->destroy();
 	}
 }

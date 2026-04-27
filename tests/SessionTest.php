@@ -22,7 +22,7 @@ final class SessionTest extends TestCase
 	protected function tearDown(): void
 	{
 		if ($this->session->active()) {
-			$this->session->forget();
+			$this->session->destroy();
 		}
 
 		parent::tearDown();
@@ -251,16 +251,24 @@ final class SessionTest extends TestCase
 		}
 	}
 
-	public function testSessionRunStartForget(): void
+	public function testSessionRunStartDestroy(): void
 	{
 		$this->session->start();
 		$this->session->set('Chuck', 'Schuldiner');
 
 		self::assertSame('Schuldiner', $this->session->get('Chuck'));
 
-		$this->session->forget();
+		$this->session->destroy();
 
 		self::assertFalse($this->session->active());
+	}
+
+	public function testDestroyFailsWhenUninitialized(): void
+	{
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Session not started');
+
+		$this->session->destroy();
 	}
 
 	public function testCloseWritesAndEndsSession(): void

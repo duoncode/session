@@ -30,6 +30,11 @@ namespace Duon\Session {
 	{
 		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionWriteCloseResult();
 	}
+
+	function session_destroy(): bool
+	{
+		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionDestroyResult();
+	}
 }
 
 namespace Duon\Session\Tests {
@@ -42,6 +47,7 @@ namespace Duon\Session\Tests {
 		private static bool $forceIdFalse = false;
 		private static bool $forceRegenerateIdFalse = false;
 		private static bool $forceWriteCloseFalse = false;
+		private static bool $forceDestroyFalse = false;
 
 		public static function sessionNameResult(): string|false
 		{
@@ -79,12 +85,22 @@ namespace Duon\Session\Tests {
 			return \session_write_close();
 		}
 
+		public static function sessionDestroyResult(): bool
+		{
+			if (self::$forceDestroyFalse) {
+				return false;
+			}
+
+			return \session_destroy();
+		}
+
 		protected function tearDown(): void
 		{
 			self::$forceNameFalse = false;
 			self::$forceIdFalse = false;
 			self::$forceRegenerateIdFalse = false;
 			self::$forceWriteCloseFalse = false;
+			self::$forceDestroyFalse = false;
 
 			if (session_status() === PHP_SESSION_ACTIVE) {
 				session_unset();
@@ -138,6 +154,18 @@ namespace Duon\Session\Tests {
 			$this->expectExceptionMessage('Session close failed');
 
 			$session->close();
+		}
+
+		public function testDestroyThrowsWhenDestroyFails(): void
+		{
+			$session = new Session();
+			$session->start();
+			self::$forceDestroyFalse = true;
+
+			$this->expectException(RuntimeException::class);
+			$this->expectExceptionMessage('Session destroy failed');
+
+			$session->destroy();
 		}
 	}
 }

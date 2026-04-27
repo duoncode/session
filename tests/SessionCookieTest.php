@@ -30,7 +30,7 @@ namespace Duon\Session\Tests {
 			self::$cookies = [];
 		}
 
-		public function testForgetPreservesCookieMetadataWhenDeletingCookie(): void
+		public function testDestroyPreservesCookieMetadataWhenDeletingCookie(): void
 		{
 			$session = new Session(options: [
 				'cookie_secure' => true,
@@ -38,7 +38,7 @@ namespace Duon\Session\Tests {
 			]);
 			$session->start();
 
-			$session->forget();
+			$session->destroy();
 
 			self::assertCount(1, self::$cookies);
 			self::assertSame('PHPSESSID', self::$cookies[0][0]);
@@ -53,12 +53,12 @@ namespace Duon\Session\Tests {
 			self::assertFalse(self::$cookies[0][2]['partitioned']);
 		}
 
-		public function testForgetPreservesCookieDomainWhenDeletingCookie(): void
+		public function testDestroyPreservesCookieDomainWhenDeletingCookie(): void
 		{
 			$session = new Session(options: ['cookie_domain' => 'example.com']);
 			$session->start();
 
-			$session->forget();
+			$session->destroy();
 
 			self::assertCount(1, self::$cookies);
 			self::assertIsArray(self::$cookies[0][2]);
