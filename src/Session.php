@@ -160,7 +160,7 @@ class Session
 			throw new RuntimeException('Session not started');
 		}
 
-		if (is_array($_SESSION[self::FLASH] ?? null)) {
+		if (array_key_exists(self::FLASH, $_SESSION ?? []) && is_array($_SESSION[self::FLASH])) {
 			$_SESSION[self::FLASH][] = [
 				'message' => htmlspecialchars($message),
 				'queue' => htmlspecialchars($queue),
