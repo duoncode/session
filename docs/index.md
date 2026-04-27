@@ -94,12 +94,18 @@ Flash messages are stored as raw strings. Escape messages when rendering them in
 ## Remembered URI
 
 ```php
-$session->rememberUri('/account');
+$session->uri->remember('/account');
 
-return $session->rememberedUri();
+return $session->uri->pull();
 ```
 
-`rememberedUri()` returns the stored URI once, then removes it. It returns `/` when the URI is expired or not a safe local path. Remembered URIs must start with a single `/`; external URLs are rejected.
+`pull()` returns the stored URI once, then removes it. It returns `/` when the URI is expired or not a safe local path. Pass a custom default when you need a different fallback:
+
+```php
+return $session->uri->pull('/dashboard');
+```
+
+Remembered URIs must start with a single `/`; external URLs are rejected. `Uri` can also be used directly with `new Uri($session, key: 'return_to')` when you need a custom storage key.
 
 ## CSRF tokens
 

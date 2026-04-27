@@ -4,6 +4,7 @@
 
 ### Added
 
+- `Session::$uri` property for remembered URI access.
 - `Csrf::refresh()` and `Csrf::remove()` helpers.
 - `Session::$csrf` property for CSRF token access.
 - `Flash::peek()` and `Flash::clear()` helpers.
@@ -15,6 +16,7 @@
 
 ### Breaking
 
+- Remembered URIs now use `$session->uri->remember()` and `$session->uri->pull()` instead of direct `Session` methods.
 - CSRF tokens now use `$session->csrf->token()` or `new Csrf($session)` instead of `new Csrf()` and `Csrf::get()`.
 - Flash messages now use `$session->flash->add()`, `$session->flash->pop()`, and `$session->flash->has()` instead of direct `Session` methods.
 - `Session::forget()` has been replaced with `Session::destroy()`.
