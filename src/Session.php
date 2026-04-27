@@ -159,8 +159,12 @@ class Session
 
 	public function regenerate(): void
 	{
-		if ($this->active()) {
-			session_regenerate_id(true);
+		if (!$this->active()) {
+			throw new RuntimeException('Session not started');
+		}
+
+		if (!session_regenerate_id(true)) {
+			throw new RuntimeException('Session id regeneration failed');
 		}
 	}
 

@@ -36,7 +36,7 @@ $userId = $session->get('user_id');
 
 Set `cookie_secure` to `true` for HTTPS deployments. The library does not enable it by default because it cannot know whether the current request came through a trusted HTTPS proxy.
 
-Call `$session->regenerate()` after login or privilege changes. Call `$session->forget()` on logout.
+Call `$session->regenerate()` after `start()` when a user logs in or changes privileges. Call `$session->forget()` on logout.
 
 ## Session data
 

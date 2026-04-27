@@ -10,6 +10,7 @@
 ### Breaking
 
 - Remembered URI redirects now only return safe local paths.
+- Session ID regeneration now throws when the session is inactive or regeneration fails.
 
 ## [0.1.0](https://github.com/duoncode/session/releases/tag/0.1.0) (2026-01-31)
 

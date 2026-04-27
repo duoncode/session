@@ -20,6 +20,11 @@ namespace Duon\Session {
 
 		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionIdResult();
 	}
+
+	function session_regenerate_id($deleteOldSession = false): bool
+	{
+		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionRegenerateIdResult($deleteOldSession);
+	}
 }
 
 namespace Duon\Session\Tests {
@@ -30,6 +35,7 @@ namespace Duon\Session\Tests {
 	{
 		private static bool $forceNameFalse = false;
 		private static bool $forceIdFalse = false;
+		private static bool $forceRegenerateIdFalse = false;
 
 		public static function sessionNameResult(): string|false
 		{
@@ -49,10 +55,25 @@ namespace Duon\Session\Tests {
 			return \session_id();
 		}
 
+		public static function sessionRegenerateIdResult($deleteOldSession): bool
+		{
+			if (self::$forceRegenerateIdFalse) {
+				return false;
+			}
+
+			return \session_regenerate_id((bool) $deleteOldSession);
+		}
+
 		protected function tearDown(): void
 		{
 			self::$forceNameFalse = false;
 			self::$forceIdFalse = false;
+			self::$forceRegenerateIdFalse = false;
+
+			if (session_status() === PHP_SESSION_ACTIVE) {
+				session_unset();
+				session_destroy();
+			}
 
 			parent::tearDown();
 		}
@@ -77,6 +98,18 @@ namespace Duon\Session\Tests {
 			$this->expectExceptionMessage('Session id not available');
 
 			$session->id();
+		}
+
+		public function testRegenerateThrowsWhenRegenerationFails(): void
+		{
+			$session = new Session();
+			$session->start();
+			self::$forceRegenerateIdFalse = true;
+
+			$this->expectException(RuntimeException::class);
+			$this->expectExceptionMessage('Session id regeneration failed');
+
+			$session->regenerate();
 		}
 	}
 }

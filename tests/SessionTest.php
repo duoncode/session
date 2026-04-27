@@ -206,6 +206,14 @@ final class SessionTest extends TestCase
 		self::assertFalse($this->session->has('Chuck'));
 	}
 
+	public function testRegenerateFailsWhenUninitialized(): void
+	{
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Session not started');
+
+		$this->session->regenerate();
+	}
+
 	public function testRegenerateId(): void
 	{
 		$this->session->start();
