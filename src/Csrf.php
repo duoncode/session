@@ -12,7 +12,7 @@ class Csrf
 		protected string $postKey = 'csrftoken',
 		protected string $headerKey = 'HTTP_X_CSRF_TOKEN',
 	) {
-		if (!isset($_SESSION[$this->sessionKey])) {
+		if (($_SESSION[$this->sessionKey] ?? null) === null) {
 			$_SESSION[$this->sessionKey] = [];
 		}
 	}
@@ -33,7 +33,7 @@ class Csrf
 		}
 
 		if ($token === null) {
-			if (isset($_SERVER[$this->headerKey])) {
+			if (($_SERVER[$this->headerKey] ?? null) !== null) {
 				$token = $_SERVER[$this->headerKey];
 			}
 		}
@@ -57,7 +57,7 @@ class Csrf
 
 	protected function set(string $page = 'default'): string
 	{
-		assert(isset($_SESSION[$this->sessionKey]) && is_array($_SESSION[$this->sessionKey]));
+		assert(is_array($_SESSION[$this->sessionKey] ?? null));
 
 		$token = base64_encode(random_bytes(32));
 		$_SESSION[$this->sessionKey][$page] = $token;

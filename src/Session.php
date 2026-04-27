@@ -131,7 +131,7 @@ class Session
 	/** @psalm-param non-empty-string $key */
 	public function has(string $key): bool
 	{
-		return isset($_SESSION[$key]);
+		return ($_SESSION[$key] ?? null) !== null;
 	}
 
 	/** @psalm-param non-empty-string $key */
@@ -160,7 +160,7 @@ class Session
 			throw new RuntimeException('Session not started');
 		}
 
-		if (isset($_SESSION[self::FLASH]) && is_array($_SESSION[self::FLASH])) {
+		if (is_array($_SESSION[self::FLASH] ?? null)) {
 			$_SESSION[self::FLASH][] = [
 				'message' => htmlspecialchars($message),
 				'queue' => htmlspecialchars($queue),
@@ -182,7 +182,7 @@ class Session
 			assert(is_array($flashes));
 			$_SESSION[self::FLASH] = [];
 		} else {
-			if (!isset($_SESSION[self::FLASH]) || !is_array($_SESSION[self::FLASH])) {
+			if (!is_array($_SESSION[self::FLASH] ?? null)) {
 				$_SESSION[self::FLASH] = [];
 
 				return [];
@@ -194,8 +194,8 @@ class Session
 			$flashes = [];
 
 			foreach ($flashMessages as $flash) {
-				assert(isset($flash['queue']));
-				assert(isset($flash['message']));
+				assert(($flash['queue'] ?? null) !== null);
+				assert(($flash['message'] ?? null) !== null);
 
 				if ($flash['queue'] === $queue) {
 					$flashes[] = $flash;
@@ -206,9 +206,7 @@ class Session
 			}
 
 			foreach (array_reverse($keys) as $key) {
-				if (isset($flashMessages[$key])) {
-					unset($flashMessages[$key]);
-				}
+				unset($flashMessages[$key]);
 			}
 
 			$_SESSION[self::FLASH] = $flashMessages;
