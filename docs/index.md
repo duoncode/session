@@ -121,6 +121,11 @@ Verify submitted tokens on unsafe requests:
 if (!$session->csrf->verify('contact')) {
     throw new RuntimeException('Invalid CSRF token');
 }
+
+$token = $session->csrf->refresh('contact');
+$session->csrf->remove('contact');
 ```
+
+`refresh()` replaces a token and returns the new value. `remove()` deletes the token for a page.
 
 `Csrf` can also be used directly with `new Csrf($session)`. `verify()` reads the token from the explicit argument, `$_POST['csrftoken']`, or the `HTTP_X_CSRF_TOKEN` server value.

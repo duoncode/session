@@ -33,6 +33,18 @@ class Csrf
 		return $this->set($page);
 	}
 
+	public function refresh(string $page = 'default'): string
+	{
+		return $this->set($page);
+	}
+
+	public function remove(string $page = 'default'): void
+	{
+		$tokens = $this->tokens();
+		unset($tokens[$page]);
+		$this->session->set($this->sessionKey, $tokens);
+	}
+
 	public function verify(
 		string $page = 'default',
 		#[\SensitiveParameter]

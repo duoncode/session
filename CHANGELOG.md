@@ -4,6 +4,7 @@
 
 ### Added
 
+- `Csrf::refresh()` and `Csrf::remove()` helpers.
 - `Session::$csrf` property for CSRF token access.
 - `Flash::peek()` and `Flash::clear()` helpers.
 - `Session::$flash` property for flash message access.

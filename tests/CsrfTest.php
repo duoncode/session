@@ -68,6 +68,31 @@ final class CsrfTest extends TestCase
 		new Csrf($this->session);
 	}
 
+	public function testCsrfRefreshReplacesToken(): void
+	{
+		$csrf = new Csrf($this->session);
+		$token = $csrf->token();
+		$newToken = $csrf->refresh();
+
+		self::assertNotSame($token, $newToken);
+		self::assertFalse($csrf->verify(token: $token));
+		self::assertTrue($csrf->verify(token: $newToken));
+	}
+
+	public function testCsrfRemoveDeletesToken(): void
+	{
+		$csrf = new Csrf($this->session);
+		$token = $csrf->token('albums');
+
+		$csrf->remove('missing');
+		self::assertTrue($csrf->verify('albums', $token));
+
+		$csrf->remove('albums');
+
+		self::assertFalse($csrf->verify('albums', $token));
+		self::assertArrayNotHasKey('albums', $this->session->get('csrftokens'));
+	}
+
 	public function testCsrfVerifyPost(): void
 	{
 		$csrf = new Csrf($this->session);
