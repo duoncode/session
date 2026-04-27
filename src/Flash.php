@@ -29,28 +29,51 @@ class Flash
 	}
 
 	/** @return array<array-key, array{message: string, queue: string}> */
-	public function pop(?string $queue = null): array
+	public function peek(?string $queue = null): array
 	{
 		$messages = $this->messages();
 
 		if ($queue === null) {
-			$this->session->set($this->key, []);
-
 			return $messages;
 		}
 
 		$flashes = [];
 
-		foreach ($messages as $key => $message) {
+		foreach ($messages as $message) {
 			if ($message['queue'] === $queue) {
 				$flashes[] = $message;
+			}
+		}
+
+		return $flashes;
+	}
+
+	/** @return array<array-key, array{message: string, queue: string}> */
+	public function pop(?string $queue = null): array
+	{
+		$flashes = $this->peek($queue);
+		$this->clear($queue);
+
+		return $flashes;
+	}
+
+	public function clear(?string $queue = null): void
+	{
+		if ($queue === null) {
+			$this->session->set($this->key, []);
+
+			return;
+		}
+
+		$messages = $this->messages();
+
+		foreach ($messages as $key => $message) {
+			if ($message['queue'] === $queue) {
 				unset($messages[$key]);
 			}
 		}
 
 		$this->session->set($this->key, $messages);
-
-		return $flashes;
 	}
 
 	public function has(?string $queue = null): bool

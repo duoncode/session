@@ -82,8 +82,12 @@ if ($session->flash->has('error')) {
     $errors = $session->flash->pop('error');
 }
 
+$messages = $session->flash->peek();
+$session->flash->clear('error');
 $messages = $session->flash->pop();
 ```
+
+`peek()` returns messages without removing them. `pop()` returns messages and removes them. `clear()` removes all messages or only the given queue.
 
 Flash messages are stored as raw strings. Escape messages when rendering them into HTML.
 

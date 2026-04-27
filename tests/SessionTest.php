@@ -204,6 +204,37 @@ final class SessionTest extends TestCase
 		self::assertSame('default', $flashes[0]['queue']);
 	}
 
+	public function testFlashMessagesCanBePeeked(): void
+	{
+		$this->session->start();
+		$this->session->flash->add('Your existence is a script');
+		$this->session->flash->add('Time is a thing we must accept', 'error');
+
+		$errors = $this->session->flash->peek('error');
+		self::assertCount(1, $errors);
+		self::assertSame('error', $errors[0]['queue']);
+
+		$flashes = $this->session->flash->peek();
+		self::assertCount(2, $flashes);
+		self::assertTrue($this->session->flash->has('error'));
+	}
+
+	public function testFlashMessagesCanBeCleared(): void
+	{
+		$this->session->start();
+		$this->session->flash->add('Your existence is a script');
+		$this->session->flash->add('Time is a thing we must accept', 'error');
+
+		$this->session->flash->clear('error');
+
+		self::assertFalse($this->session->flash->has('error'));
+		self::assertTrue($this->session->flash->has());
+
+		$this->session->flash->clear();
+
+		self::assertFalse($this->session->flash->has());
+	}
+
 	public function testFlashMessagesAreReturnedRaw(): void
 	{
 		$this->session->start();

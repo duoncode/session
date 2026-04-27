@@ -4,6 +4,7 @@
 
 ### Added
 
+- `Flash::peek()` and `Flash::clear()` helpers.
 - `Session::$flash` property for flash message access.
 - `Session::close()` to write the current session data and close the active session.
 - Helper methods for reading all session data, clearing the session, removing keys, and pulling values.
