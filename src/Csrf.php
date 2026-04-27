@@ -19,9 +19,7 @@ class Csrf
 
 	public function get(string $page = 'default'): string
 	{
-		$token = (string) ($_SESSION[$this->sessionKey][$page] ?? $this->set($page));
-
-		return $token;
+		return (string) ($_SESSION[$this->sessionKey][$page] ?? $this->set($page));
 	}
 
 	public function verify(
