@@ -39,6 +39,17 @@ final class SessionTest extends TestCase
 		self::assertNotEmpty($this->session->id());
 	}
 
+	public function testStartIsIdempotentWhenAlreadyActive(): void
+	{
+		$this->session->start();
+		$id = $this->session->id();
+
+		$this->session->start();
+
+		self::assertTrue($this->session->active());
+		self::assertSame($id, $this->session->id());
+	}
+
 	public function testSetFailsWhenUninitialized(): void
 	{
 		$this->expectException(RuntimeException::class);

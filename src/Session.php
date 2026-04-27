@@ -20,33 +20,34 @@ class Session
 
 	public function start(): void
 	{
-		if (session_status() === PHP_SESSION_NONE) {
-			if (!headers_sent($file, $line)) {
-				if ($this->name) {
-					session_name($this->name);
-				}
+		if (session_status() !== PHP_SESSION_NONE) {
+			return;
+		}
 
-				if ($this->handler) {
-					session_set_save_handler($this->handler, true);
-				}
+		if (headers_sent($file, $line)) {
+			// Requires sent headers, which the test suite cannot trigger reliably.
+			// @codeCoverageIgnoreStart
+			throw new RuntimeException(
+				__METHOD__ . 'Session started after headers sent. File: ' . $file . ' line: ' . $line,
+			);
 
-				session_cache_limiter('');
+			// @codeCoverageIgnoreEnd
+		}
 
-				if (!session_start($this->options)) {
-					// @codeCoverageIgnoreStart
-					throw new RuntimeException(__METHOD__ . 'session_start failed.');
+		if ($this->name) {
+			session_name($this->name);
+		}
 
-					// @codeCoverageIgnoreEnd
-				}
-			} else {
-				// Cannot be provoked in the test suit
-				// @codeCoverageIgnoreStart
-				throw new RuntimeException(
-					__METHOD__ . 'Session started after headers sent. File: ' . $file . ' line: ' . $line,
-				);
+		if ($this->handler) {
+			session_set_save_handler($this->handler, true);
+		}
 
-				// @codeCoverageIgnoreEnd
-			}
+		session_cache_limiter('');
+
+		if (!session_start($this->options)) {
+			// session_start() only returns false after PHP accepts the setup but fails internally;
+			// forcing that path would make the test process depend on unstable runtime state.
+			throw new RuntimeException(__METHOD__ . 'session_start failed.'); // @codeCoverageIgnore
 		}
 	}
 
@@ -116,7 +117,6 @@ class Session
 
 	/**
 	 * @psalm-suppress MixedAssignment
-	 *
 	 * @psalm-param non-empty-string $key
 	 * */
 	public function set(string $key, mixed $value): void
@@ -181,34 +181,36 @@ class Session
 			$flashes = $_SESSION[self::FLASH];
 			assert(is_array($flashes), 'Flash storage must be an array.');
 			$_SESSION[self::FLASH] = [];
-		} else {
-			if (!array_key_exists(self::FLASH, $_SESSION ?? []) || !is_array($_SESSION[self::FLASH])) {
-				$_SESSION[self::FLASH] = [];
 
-				return [];
-			}
-
-			$flashMessages = $_SESSION[self::FLASH];
-			$keys = [];
-			$flashes = [];
-
-			foreach (array_keys($flashMessages) as $key) {
-				assert(is_array($flashMessages[$key]), 'Flash entry must be an array.');
-				assert(($flashMessages[$key]['queue'] ?? null) !== null, 'Flash queue must exist.');
-				assert(($flashMessages[$key]['message'] ?? null) !== null, 'Flash message must exist.');
-
-				if ($flashMessages[$key]['queue'] === $queue) {
-					$flashes[] = $flashMessages[$key];
-					$keys[] = $key;
-				}
-			}
-
-			foreach (array_reverse($keys) as $key) {
-				unset($flashMessages[$key]);
-			}
-
-			$_SESSION[self::FLASH] = $flashMessages;
+			return $flashes;
 		}
+
+		if (!array_key_exists(self::FLASH, $_SESSION ?? []) || !is_array($_SESSION[self::FLASH])) {
+			$_SESSION[self::FLASH] = [];
+
+			return [];
+		}
+
+		$flashMessages = $_SESSION[self::FLASH];
+		$keys = [];
+		$flashes = [];
+
+		foreach (array_keys($flashMessages) as $key) {
+			assert(is_array($flashMessages[$key]), 'Flash entry must be an array.');
+			assert(($flashMessages[$key]['queue'] ?? null) !== null, 'Flash queue must exist.');
+			assert(($flashMessages[$key]['message'] ?? null) !== null, 'Flash message must exist.');
+
+			if ($flashMessages[$key]['queue'] === $queue) {
+				$flashes[] = $flashMessages[$key];
+				$keys[] = $key;
+			}
+		}
+
+		foreach (array_reverse($keys) as $key) {
+			unset($flashMessages[$key]);
+		}
+
+		$_SESSION[self::FLASH] = $flashMessages;
 
 		return $flashes;
 	}
