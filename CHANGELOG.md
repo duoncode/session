@@ -15,6 +15,10 @@
 - Sessions now use PHP's `nocache` cache limiter by default. Set `cache_limiter` to `''` to disable PHP cache headers.
 - CSRF helpers now throw when used without an active session.
 
+### Fixed
+
+- CSRF verification no longer creates missing tokens as a side effect.
+
 ## [0.1.0](https://github.com/duoncode/session/releases/tag/0.1.0) (2026-01-31)
 
 Initial release.

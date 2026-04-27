@@ -112,6 +112,14 @@ final class CsrfTest extends TestCase
 		self::assertFalse($csrf->verify());
 	}
 
+	public function testCsrfVerifyDoesNotCreateToken(): void
+	{
+		$csrf = new Csrf();
+
+		self::assertFalse($csrf->verify('missing', 'submitted'));
+		self::assertArrayNotHasKey('missing', $_SESSION['csrftokens']);
+	}
+
 	public function testCsrfGetVerifyDifferentPage(): void
 	{
 		$csrf = new Csrf();

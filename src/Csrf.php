@@ -45,9 +45,9 @@ class Csrf
 			return false;
 		}
 
-		$savedToken = $this->get($page);
+		$savedToken = $this->token($page);
 
-		if (hash_equals('', $savedToken) || hash_equals('0', $savedToken)) {
+		if ($savedToken === null) {
 			return false;
 		}
 
@@ -67,6 +67,14 @@ class Csrf
 		$_SESSION[$this->sessionKey][$page] = $token;
 
 		return $token;
+	}
+
+	private function token(string $page): ?string
+	{
+		/** @psalm-suppress MixedAssignment */
+		$token = $_SESSION[$this->sessionKey][$page] ?? null;
+
+		return is_string($token) ? $token : null;
 	}
 
 	private function initStorage(): void
