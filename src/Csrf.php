@@ -7,6 +7,11 @@ namespace Duon\Session;
 /** @psalm-api */
 class Csrf
 {
+	/**
+	 * @param non-empty-string $sessionKey
+	 * @param non-empty-string $postKey
+	 * @param non-empty-string $headerKey
+	 */
 	public function __construct(
 		protected string $sessionKey = 'csrftokens',
 		protected string $postKey = 'csrftoken',
