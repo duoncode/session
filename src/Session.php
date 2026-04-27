@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Duon\Session;
 
-use Duon\Session\OutOfBoundsException;
-use Duon\Session\RuntimeException;
 use SessionHandlerInterface;
 
 /** @psalm-api */
