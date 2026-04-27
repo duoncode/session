@@ -224,7 +224,7 @@ class Session
 			return (
 				count(array_filter(
 					$messages,
-					fn(array $f) => $f['queue'] === $queue,
+					static fn(array $f) => $f['queue'] === $queue,
 				)) > 0
 			);
 		}
