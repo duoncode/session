@@ -64,7 +64,9 @@ final class SessionTest extends TestCase
 	public function testSessionThrowsWhenMissing(): void
 	{
 		$this->expectException(OutOfBoundsException::class);
-		$this->expectExceptionMessage("The session key 'To exist in this world may be a mistake' does not exist");
+		$this->expectExceptionMessage(
+			"The session key 'To exist in this world may be a mistake' does not exist",
+		);
 
 		$this->session->get('To exist in this world may be a mistake');
 	}

@@ -37,15 +37,16 @@ class Session
 				if (!session_start($this->options)) {
 					// @codeCoverageIgnoreStart
 					throw new RuntimeException(__METHOD__ . 'session_start failed.');
+
 					// @codeCoverageIgnoreEnd
 				}
 			} else {
 				// Cannot be provoked in the test suit
 				// @codeCoverageIgnoreStart
 				throw new RuntimeException(
-					__METHOD__ . 'Session started after headers sent. File: '
-						. $file . ' line: ' . $line,
+					__METHOD__ . 'Session started after headers sent. File: ' . $file . ' line: ' . $line,
 				);
+
 				// @codeCoverageIgnoreEnd
 			}
 		}
@@ -224,10 +225,12 @@ class Session
 		$messages = $_SESSION[self::FLASH] ?? [];
 
 		if ($queue !== null) {
-			return count(array_filter(
-				$messages,
-				fn(array $f) => $f['queue'] === $queue,
-			)) > 0;
+			return (
+				count(array_filter(
+					$messages,
+					fn(array $f) => $f['queue'] === $queue,
+				)) > 0
+			);
 		}
 
 		return count($messages) > 0;
