@@ -4,6 +4,7 @@
 
 ### Added
 
+- Helper methods for reading all session data, clearing the session, removing keys, and pulling values.
 - Secure default options for native PHP sessions.
 - Package documentation.
 

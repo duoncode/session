@@ -85,18 +85,51 @@ final class SessionTest extends TestCase
 		$this->session->set('Chuck', 'Schuldiner');
 	}
 
-	public function testSessionUnset(): void
+	public function testSessionAllFailsWhenUninitialized(): void
+	{
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Session not started');
+
+		$this->session->all();
+	}
+
+	public function testSessionAllClearRemovePull(): void
 	{
 		$this->session->start();
 		$this->session->set('Chuck', 'Schuldiner');
+		$this->session->set('Rick', 'Rozz');
 
-		self::assertSame('Schuldiner', $this->session->get('Chuck'));
-		self::assertTrue($this->session->has('Chuck'));
+		self::assertSame(
+			[
+				'Chuck' => 'Schuldiner',
+				'Rick' => 'Rozz',
+			],
+			$this->session->all(),
+		);
 
-		$this->session->unset('Chuck');
+		$this->session->remove('Rick');
+		self::assertFalse($this->session->has('Rick'));
 
-		self::assertNull($this->session->get('Chuck', null));
+		self::assertSame('Schuldiner', $this->session->pull('Chuck'));
 		self::assertFalse($this->session->has('Chuck'));
+		self::assertSame('guest', $this->session->pull('missing', 'guest'));
+
+		$this->session->set('James', 'Murphy');
+		$this->session->clear();
+
+		self::assertSame([], $this->session->all());
+	}
+
+	public function testSessionPullThrowsWhenMissing(): void
+	{
+		$this->session->start();
+
+		$this->expectException(OutOfBoundsException::class);
+		$this->expectExceptionMessage(
+			"The session key 'To exist in this world may be a mistake' does not exist",
+		);
+
+		$this->session->pull('To exist in this world may be a mistake');
 	}
 
 	public function testSessionThrowsWhenMissing(): void

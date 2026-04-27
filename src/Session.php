@@ -118,11 +118,53 @@ class Session
 		return $id;
 	}
 
+	/** @return array<array-key, mixed> */
+	public function all(): array
+	{
+		$this->assertActive();
+
+		/** @var array<array-key, mixed> $session */
+		$session = $_SESSION;
+
+		return $session;
+	}
+
+	public function clear(): void
+	{
+		$this->assertActive();
+
+		session_unset();
+	}
+
 	/** @psalm-param non-empty-string $key */
 	public function get(string $key, mixed $default = null): mixed
 	{
 		if ($this->has($key)) {
 			return $_SESSION[$key];
+		}
+
+		if (func_num_args() > 1) {
+			return $default;
+		}
+
+		throw new OutOfBoundsException(
+			"The session key '{$key}' does not exist",
+		);
+	}
+
+	/**
+	 * @psalm-suppress MixedAssignment
+	 * @psalm-param non-empty-string $key
+	 */
+	public function pull(string $key, mixed $default = null): mixed
+	{
+		$this->assertActive();
+
+		if ($this->has($key)) {
+			$value = $_SESSION[$key];
+			unset($_SESSION[$key]);
+
+			return $value;
 		}
 
 		if (func_num_args() > 1) {
@@ -154,8 +196,10 @@ class Session
 	}
 
 	/** @psalm-param non-empty-string $key */
-	public function unset(string $key): void
+	public function remove(string $key): void
 	{
+		$this->assertActive();
+
 		unset($_SESSION[$key]);
 	}
 
@@ -285,6 +329,13 @@ class Session
 		}
 
 		return '/';
+	}
+
+	private function assertActive(): void
+	{
+		if (!$this->active()) {
+			throw new RuntimeException('Session not started');
+		}
 	}
 
 	private static function isLocalUri(string $uri): bool

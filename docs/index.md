@@ -52,14 +52,23 @@ if ($session->has('name')) {
     echo $session->get('name');
 }
 
-$session->unset('name');
+$all = $session->all();
+$name = $session->pull('name');
+
+$session->remove('name');
+$session->clear();
 ```
 
-`get()` throws when the key is missing unless you pass a default value:
+Start the session before reading or changing session data. `all()` returns the complete session data array. `clear()` removes all session data while keeping the session active.
+
+`get()` and `pull()` throw when the key is missing unless you pass a default value:
 
 ```php
 $name = $session->get('name', 'Guest');
+$name = $session->pull('name', 'Guest');
 ```
+
+`pull()` returns the value and removes it from the session.
 
 ## Flash messages
 
