@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased](https://github.com/duoncode/session/compare/0.1.0...HEAD)
+
+### Added
+
+- Secure default options for native PHP sessions.
+
 ## [0.1.0](https://github.com/duoncode/session/releases/tag/0.1.0) (2026-01-31)
 
 Initial release.

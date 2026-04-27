@@ -12,11 +12,23 @@ class Session
 	public const string FLASH = 'duon_flash_messages';
 	public const string REMEMBER = 'duon_remembered_uri';
 
+	private const array DEFAULT_OPTIONS = [
+		'cookie_httponly' => true,
+		'cookie_samesite' => 'Lax',
+		'use_only_cookies' => true,
+		'use_strict_mode' => true,
+		'use_trans_sid' => false,
+	];
+
+	protected readonly array $options;
+
 	public function __construct(
 		protected readonly string $name = '',
-		protected readonly array $options = [],
+		array $options = [],
 		protected readonly ?SessionHandlerInterface $handler = null,
-	) {}
+	) {
+		$this->options = array_replace(self::DEFAULT_OPTIONS, $options);
+	}
 
 	public function start(): void
 	{

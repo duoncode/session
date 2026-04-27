@@ -50,6 +50,28 @@ final class SessionTest extends TestCase
 		self::assertSame($id, $this->session->id());
 	}
 
+	public function testSessionUsesSecureDefaults(): void
+	{
+		$this->session->start();
+		$params = session_get_cookie_params();
+
+		self::assertTrue($params['httponly']);
+		self::assertSame('Lax', $params['samesite']);
+		self::assertSame('1', ini_get('session.use_only_cookies'));
+		self::assertSame('1', ini_get('session.use_strict_mode'));
+		self::assertFalse((bool) ini_get('session.use_trans_sid'));
+	}
+
+	public function testSessionOptionsOverrideDefaults(): void
+	{
+		$session = new Session(options: ['cookie_samesite' => 'Strict']);
+		$session->start();
+		$params = session_get_cookie_params();
+
+		self::assertTrue($params['httponly']);
+		self::assertSame('Strict', $params['samesite']);
+	}
+
 	public function testSetFailsWhenUninitialized(): void
 	{
 		$this->expectException(RuntimeException::class);
