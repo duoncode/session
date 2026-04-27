@@ -50,8 +50,8 @@ class Session
 			session_name($this->name);
 		}
 
-		if ($this->handler) {
-			session_set_save_handler($this->handler, true);
+		if ($this->handler && !session_set_save_handler($this->handler, true)) {
+			throw new RuntimeException('Session handler setup failed');
 		}
 
 		session_cache_limiter('');
