@@ -24,6 +24,7 @@ class Csrf
 
 	public function verify(
 		string $page = 'default',
+		#[\SensitiveParameter]
 		?string $token = null,
 	): bool {
 		if ($token === null) {
