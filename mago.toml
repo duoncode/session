@@ -21,11 +21,9 @@ preserve-breaking-conditional-expression = true
 integrations = []
 
 [linter.rules]
-# cyclomatic-complexity = { enabled = false }
-# kan-defect = { enabled = false }
-# literal-named-argument = { enabled = false }
-# no-boolean-flag-parameter = { enabled = false }
-# no-else-clause = { enabled = false }
-# no-shorthand-ternary = { exclude = ['tests'] }
-# single-class-per-file = { exclude = ['tests'] }
-# too-many-methods = { enabled = false }
+cyclomatic-complexity = {  exclude = ['src/Session.php'] }
+kan-defect = {  exclude = ['src/Session.php'] }
+literal-named-argument = { enabled = false }
+no-literal-password = { exclude = ['tests'] }
+readable-literal = { min-digits = 7 }
+too-many-methods = { exclude = ['src/Session.php', 'tests'] }
