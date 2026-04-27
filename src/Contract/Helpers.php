@@ -9,7 +9,7 @@ use Duon\Session\Flash;
 use Duon\Session\Session;
 use Duon\Session\Uri;
 
-/** @psalm-api */
+/** @api */
 interface Helpers
 {
 	public function flash(Session $session): Flash;

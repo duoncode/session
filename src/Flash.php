@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Session;
 
-/** @psalm-api */
+/** @api */
 class Flash
 {
 	public const string STORAGE = 'duon_flash_messages';

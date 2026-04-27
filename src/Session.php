@@ -6,7 +6,7 @@ namespace Duon\Session;
 
 use SessionHandlerInterface;
 
-/** @psalm-api */
+/** @api */
 class Session
 {
 	private const array DEFAULT_OPTIONS = [
@@ -163,7 +163,7 @@ class Session
 		session_unset();
 	}
 
-	/** @psalm-param non-empty-string $key */
+	/** @param non-empty-string $key */
 	public function get(string $key, mixed $default = null): mixed
 	{
 		$this->assertActive();
@@ -183,7 +183,7 @@ class Session
 
 	/**
 	 * @psalm-suppress MixedAssignment
-	 * @psalm-param non-empty-string $key
+	 * @param non-empty-string $key
 	 */
 	public function pull(string $key, mixed $default = null): mixed
 	{
@@ -207,7 +207,7 @@ class Session
 
 	/**
 	 * @psalm-suppress MixedAssignment
-	 * @psalm-param non-empty-string $key
+	 * @param non-empty-string $key
 	 * */
 	public function set(string $key, mixed $value): void
 	{
@@ -216,7 +216,7 @@ class Session
 		$_SESSION[$key] = $value;
 	}
 
-	/** @psalm-param non-empty-string $key */
+	/** @param non-empty-string $key */
 	public function has(string $key): bool
 	{
 		$this->assertActive();
@@ -224,7 +224,7 @@ class Session
 		return ($_SESSION[$key] ?? null) !== null;
 	}
 
-	/** @psalm-param non-empty-string $key */
+	/** @param non-empty-string $key */
 	public function remove(string $key): void
 	{
 		$this->assertActive();

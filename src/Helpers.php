@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Session;
 
-/** @psalm-api */
+/** @api */
 final class Helpers implements Contract\Helpers
 {
 	#[\Override]
