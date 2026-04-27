@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Session\Tests;
 
+use Duon\Session\Flash;
 use Duon\Session\OutOfBoundsException;
 use Duon\Session\RuntimeException;
 use Duon\Session\Session;
@@ -151,19 +152,36 @@ final class SessionTest extends TestCase
 		self::assertSame('Rozz', $this->session->get('Rick', 'Rozz'));
 	}
 
+	public function testSessionFlashPropertyReturnsSameInstance(): void
+	{
+		self::assertInstanceOf(Flash::class, $this->session->flash);
+		self::assertSame($this->session->flash, $this->session->flash);
+	}
+
+	public function testFlashCanBeUsedDirectly(): void
+	{
+		$this->session->start();
+		$flash = new Flash($this->session);
+
+		$flash->add('Your existence is a script');
+
+		self::assertTrue($flash->has());
+		self::assertSame('Your existence is a script', $flash->pop()[0]['message']);
+	}
+
 	public function testFlashMessagesAll(): void
 	{
 		$this->session->start();
-		self::assertFalse($this->session->hasFlashes());
+		self::assertFalse($this->session->flash->has());
 
-		$this->session->flash('Your existence is a script');
-		$this->session->flash('Time is a thing we must accept', 'error');
+		$this->session->flash->add('Your existence is a script');
+		$this->session->flash->add('Time is a thing we must accept', 'error');
 
-		self::assertTrue($this->session->hasFlashes());
-		self::assertTrue($this->session->hasFlashes('error'));
-		self::assertFalse($this->session->hasFlashes('info'));
+		self::assertTrue($this->session->flash->has());
+		self::assertTrue($this->session->flash->has('error'));
+		self::assertFalse($this->session->flash->has('info'));
 
-		$flashes = $this->session->popFlashes();
+		$flashes = $this->session->flash->pop();
 		self::assertCount(2, $flashes);
 		self::assertSame('default', $flashes[0]['queue']);
 		self::assertSame('error', $flashes[1]['queue']);
@@ -172,16 +190,16 @@ final class SessionTest extends TestCase
 	public function testFlashMessagesQueue(): void
 	{
 		$this->session->start();
-		self::assertFalse($this->session->hasFlashes());
+		self::assertFalse($this->session->flash->has());
 
-		$this->session->flash('Your existence is a script');
-		$this->session->flash('Time is a thing we must accept', 'error');
+		$this->session->flash->add('Your existence is a script');
+		$this->session->flash->add('Time is a thing we must accept', 'error');
 
-		$flashes = $this->session->popFlashes('error');
+		$flashes = $this->session->flash->pop('error');
 		self::assertCount(1, $flashes);
 		self::assertSame('error', $flashes[0]['queue']);
 
-		$flashes = $this->session->popFlashes();
+		$flashes = $this->session->flash->pop();
 		self::assertCount(1, $flashes);
 		self::assertSame('default', $flashes[0]['queue']);
 	}
@@ -189,9 +207,9 @@ final class SessionTest extends TestCase
 	public function testFlashMessagesAreReturnedRaw(): void
 	{
 		$this->session->start();
-		$this->session->flash('<strong>Saved</strong>', 'alerts&info');
+		$this->session->flash->add('<strong>Saved</strong>', 'alerts&info');
 
-		$flashes = $this->session->popFlashes();
+		$flashes = $this->session->flash->pop();
 
 		self::assertSame('<strong>Saved</strong>', $flashes[0]['message']);
 		self::assertSame('alerts&info', $flashes[0]['queue']);
@@ -200,12 +218,34 @@ final class SessionTest extends TestCase
 	public function testPopFlashesQueueReturnsEmptyWhenUnset(): void
 	{
 		$this->session->start();
-		unset($_SESSION[Session::FLASH]);
+		unset($_SESSION[Flash::STORAGE]);
 
-		$flashes = $this->session->popFlashes('error');
+		$flashes = $this->session->flash->pop('error');
 
 		self::assertSame([], $flashes);
-		self::assertSame([], $_SESSION[Session::FLASH]);
+		self::assertSame([], $_SESSION[Flash::STORAGE]);
+	}
+
+	public function testFlashIgnoresInvalidStorage(): void
+	{
+		$this->session->start();
+		$this->session->set(Flash::STORAGE, 'invalid');
+
+		self::assertFalse($this->session->flash->has());
+	}
+
+	public function testFlashIgnoresInvalidEntries(): void
+	{
+		$this->session->start();
+		$this->session->set(Flash::STORAGE, [
+			'invalid',
+			['message' => 'Saved.', 'queue' => 'default'],
+		]);
+
+		$flashes = $this->session->flash->pop();
+
+		self::assertCount(1, $flashes);
+		self::assertSame('Saved.', $flashes[1]['message']);
 	}
 
 	public function testFlashMessagesFailWhenUninitialized(): void
@@ -213,7 +253,7 @@ final class SessionTest extends TestCase
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Session not started');
 
-		$this->session->flash('Your existence is a script');
+		$this->session->flash->add('Your existence is a script');
 	}
 
 	public function testRememberUri(): void

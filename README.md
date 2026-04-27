@@ -6,7 +6,7 @@
 [![Psalm level](https://shepherd.dev/github/duoncode/session/level.svg?)](https://duon.sh/session)
 [![Psalm coverage](https://shepherd.dev/github/duoncode/session/coverage.svg?)](https://shepherd.dev/github/duoncode/session)
 
-Helper classes for native PHP sessions and CSRF.
+Helper classes for native PHP sessions, flash messages, and CSRF.
 
 ## Installation
 
@@ -31,6 +31,8 @@ $session->start();
 
 $session->set('user_id', 123);
 $userId = $session->get('user_id');
+
+$session->flash->add('Signed in.');
 
 $csrf = new Csrf();
 $token = $csrf->get('profile');

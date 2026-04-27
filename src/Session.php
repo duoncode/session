@@ -9,7 +9,6 @@ use SessionHandlerInterface;
 /** @psalm-api */
 class Session
 {
-	public const string FLASH = 'duon_flash_messages';
 	public const string REMEMBER = 'duon_remembered_uri';
 
 	private const array DEFAULT_OPTIONS = [
@@ -22,6 +21,14 @@ class Session
 	];
 
 	protected readonly array $options;
+
+	/** @psalm-suppress UnusedProperty Used by the $flash property hook. */
+	private ?Flash $flashInstance = null;
+
+	/** @psalm-suppress PropertyNotSetInConstructor Virtual property backed by a get hook. */
+	public Flash $flash {
+		get => $this->flashInstance ??= new Flash($this);
+	}
 
 	public function __construct(
 		protected readonly string $name = '',
@@ -226,88 +233,6 @@ class Session
 		if (!session_regenerate_id(true)) {
 			throw new RuntimeException('Session id regeneration failed');
 		}
-	}
-
-	public function flash(
-		string $message,
-		string $queue = 'default',
-	): void {
-		$this->assertActive();
-
-		if (array_key_exists(self::FLASH, $_SESSION ?? []) && is_array($_SESSION[self::FLASH])) {
-			$_SESSION[self::FLASH][] = [
-				'message' => $message,
-				'queue' => $queue,
-			];
-
-			return;
-		}
-
-		$_SESSION[self::FLASH] = [[
-			'message' => $message,
-			'queue' => $queue,
-		]];
-	}
-
-	public function popFlashes(?string $queue = null): array
-	{
-		$this->assertActive();
-
-		if ($queue === null) {
-			$flashes = $_SESSION[self::FLASH];
-			assert(is_array($flashes), 'Flash storage must be an array.');
-			$_SESSION[self::FLASH] = [];
-
-			return $flashes;
-		}
-
-		if (!array_key_exists(self::FLASH, $_SESSION ?? []) || !is_array($_SESSION[self::FLASH])) {
-			$_SESSION[self::FLASH] = [];
-
-			return [];
-		}
-
-		$flashMessages = $_SESSION[self::FLASH];
-		$keys = [];
-		$flashes = [];
-
-		foreach (array_keys($flashMessages) as $key) {
-			assert(is_array($flashMessages[$key]), 'Flash entry must be an array.');
-			assert(($flashMessages[$key]['queue'] ?? null) !== null, 'Flash queue must exist.');
-			assert(($flashMessages[$key]['message'] ?? null) !== null, 'Flash message must exist.');
-
-			if ($flashMessages[$key]['queue'] === $queue) {
-				$flashes[] = $flashMessages[$key];
-				$keys[] = $key;
-			}
-		}
-
-		foreach (array_reverse($keys) as $key) {
-			unset($flashMessages[$key]);
-		}
-
-		$_SESSION[self::FLASH] = $flashMessages;
-
-		return $flashes;
-	}
-
-	public function hasFlashes(?string $queue = null): bool
-	{
-		$this->assertActive();
-
-		/** @var array */
-		$messages = $_SESSION[self::FLASH] ?? [];
-
-		if ($queue !== null) {
-			return (
-				count(array_filter(
-					$messages,
-					static fn(array $f) => $f['queue'] === $queue,
-				)) > 0
-			);
-		}
-
-		return count($messages) > 0;
 	}
 
 	public function rememberUri(

@@ -4,6 +4,7 @@
 
 ### Added
 
+- `Session::$flash` property for flash message access.
 - `Session::close()` to write the current session data and close the active session.
 - Helper methods for reading all session data, clearing the session, removing keys, and pulling values.
 - Secure default options for native PHP sessions.
@@ -11,6 +12,7 @@
 
 ### Breaking
 
+- Flash messages now use `$session->flash->add()`, `$session->flash->pop()`, and `$session->flash->has()` instead of direct `Session` methods.
 - `Session::forget()` has been replaced with `Session::destroy()`.
 - Remembered URI redirects now only return safe local paths.
 - Session ID regeneration now throws when the session is inactive or regeneration fails.

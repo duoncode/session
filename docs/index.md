@@ -75,11 +75,14 @@ $name = $session->pull('name', 'Guest');
 ## Flash messages
 
 ```php
-$session->flash('Saved.');
-$session->flash('Could not save.', 'error');
+$session->flash->add('Saved.');
+$session->flash->add('Could not save.', 'error');
 
-$messages = $session->popFlashes();
-$errors = $session->popFlashes('error');
+if ($session->flash->has('error')) {
+    $errors = $session->flash->pop('error');
+}
+
+$messages = $session->flash->pop();
 ```
 
 Flash messages are stored as raw strings. Escape messages when rendering them into HTML.
