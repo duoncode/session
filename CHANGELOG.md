@@ -19,6 +19,7 @@
 ### Fixed
 
 - CSRF verification no longer creates missing tokens as a side effect.
+- Session cookie deletion now preserves SameSite and partitioned metadata.
 
 ## [0.1.0](https://github.com/duoncode/session/releases/tag/0.1.0) (2026-01-31)
 

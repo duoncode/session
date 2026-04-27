@@ -74,15 +74,23 @@ class Session
 			$params = session_get_cookie_params();
 			$name = session_name();
 			if ($name !== false) {
-				setcookie(
-					$name,
-					'',
-					time() - 42000,
-					(string) $params['path'],
-					(string) $params['domain'],
-					(bool) $params['secure'],
-					(bool) $params['httponly'],
-				);
+				/** @psalm-suppress InvalidArrayOffset PHP 8.5 exposes partitioned cookies. */
+				$partitioned = (bool) ($params['partitioned'] ?? false);
+				$options = [
+					'expires' => time() - 42000,
+					'path' => (string) $params['path'],
+					'secure' => (bool) $params['secure'],
+					'httponly' => (bool) $params['httponly'],
+					'samesite' => (string) $params['samesite'],
+					'partitioned' => $partitioned,
+				];
+
+				$domain = (string) $params['domain'];
+				if ($domain !== '') {
+					$options['domain'] = $domain;
+				}
+
+				setcookie($name, '', $options);
 			}
 		}
 
