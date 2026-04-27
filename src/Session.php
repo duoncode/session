@@ -13,6 +13,7 @@ class Session
 		'cache_limiter' => 'nocache',
 		'cookie_httponly' => true,
 		'cookie_samesite' => 'Lax',
+		'cookie_secure' => true,
 		'use_only_cookies' => true,
 		'use_strict_mode' => true,
 		'use_trans_sid' => false,

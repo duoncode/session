@@ -17,6 +17,7 @@
 
 ### Breaking
 
+- Session cookies now default to `Secure`; set `cookie_secure` to `false` only for intentional plain HTTP environments.
 - `Session` constructor arguments are now ordered as `$options`, `$name`, `$handler`, `$helpers`.
 - CSRF now uses `duon_csrf_tokens`, `_token`, and `X-CSRF-Token` as default storage key, form field, and header names.
 - Remembered URIs now use `$session->uri->remember()` and `$session->uri->pull()` instead of direct `Session` methods.

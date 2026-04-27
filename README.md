@@ -23,9 +23,7 @@ Start here: [docs/index.md](docs/index.md).
 ```php
 use Duon\Session\Session;
 
-$session = new Session([
-    'cookie_secure' => true,
-]);
+$session = new Session();
 $session->start();
 
 $session->set('user_id', 123);
@@ -36,7 +34,7 @@ $session->flash->add('Signed in.');
 $token = $session->csrf->token('profile');
 ```
 
-`Session` merges custom options with secure defaults for HttpOnly cookies, SameSite=Lax, strict session IDs, cookie-only session IDs, disabled transparent session IDs, and PHP's `nocache` session cache limiter. Set `cookie_secure` to `true` for HTTPS deployments.
+`Session` merges custom options with secure defaults for Secure and HttpOnly cookies, SameSite=Lax, strict session IDs, cookie-only session IDs, disabled transparent session IDs, and PHP's `nocache` session cache limiter. Set `cookie_secure` to `false` only for intentional plain HTTP environments, such as local development without TLS.
 
 ## License
 

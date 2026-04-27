@@ -13,9 +13,7 @@ composer require duon/session
 ```php
 use Duon\Session\Session;
 
-$session = new Session([
-    'cookie_secure' => true,
-]);
+$session = new Session();
 $session->start();
 
 $session->set('user_id', 123);
@@ -29,13 +27,20 @@ $userId = $session->get('user_id');
     'cache_limiter' => 'nocache',
     'cookie_httponly' => true,
     'cookie_samesite' => 'Lax',
+    'cookie_secure' => true,
     'use_only_cookies' => true,
     'use_strict_mode' => true,
     'use_trans_sid' => false,
 ]
 ```
 
-Set `cookie_secure` to `true` for HTTPS deployments. The library does not enable it by default because it cannot know whether the current request came through a trusted HTTPS proxy.
+`cookie_secure` defaults to `true`, so browsers only send the session cookie over HTTPS. Disable it only for intentional plain HTTP environments, such as local development without TLS:
+
+```php
+$session = new Session([
+    'cookie_secure' => false,
+]);
+```
 
 Set `cache_limiter` to `''` only if your application sends its own cache headers for session-backed responses.
 

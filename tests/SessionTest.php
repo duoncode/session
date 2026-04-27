@@ -62,6 +62,7 @@ final class SessionTest extends TestCase
 		self::assertSame('nocache', session_cache_limiter());
 		self::assertTrue($params['httponly']);
 		self::assertSame('Lax', $params['samesite']);
+		self::assertTrue($params['secure']);
 		self::assertSame('1', ini_get('session.use_only_cookies'));
 		self::assertSame('1', ini_get('session.use_strict_mode'));
 		self::assertFalse((bool) ini_get('session.use_trans_sid'));
@@ -72,6 +73,7 @@ final class SessionTest extends TestCase
 		$session = new Session(options: [
 			'cache_limiter' => '',
 			'cookie_samesite' => 'Strict',
+			'cookie_secure' => false,
 		]);
 		$session->start();
 		$params = session_get_cookie_params();
@@ -79,6 +81,7 @@ final class SessionTest extends TestCase
 		self::assertSame('', session_cache_limiter());
 		self::assertTrue($params['httponly']);
 		self::assertSame('Strict', $params['samesite']);
+		self::assertFalse($params['secure']);
 	}
 
 	public function testSetFailsWhenUninitialized(): void
