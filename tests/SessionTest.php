@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Duon\Session\Tests;
 
+use Duon\Session\Csrf;
 use Duon\Session\Flash;
 use Duon\Session\OutOfBoundsException;
 use Duon\Session\RuntimeException;
@@ -156,6 +157,14 @@ final class SessionTest extends TestCase
 	{
 		self::assertInstanceOf(Flash::class, $this->session->flash);
 		self::assertSame($this->session->flash, $this->session->flash);
+	}
+
+	public function testSessionCsrfPropertyReturnsSameInstance(): void
+	{
+		$this->session->start();
+
+		self::assertInstanceOf(Csrf::class, $this->session->csrf);
+		self::assertSame($this->session->csrf, $this->session->csrf);
 	}
 
 	public function testRememberUri(): void

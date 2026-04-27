@@ -106,10 +106,7 @@ return $session->rememberedUri();
 Start the session before creating or verifying CSRF tokens. `Csrf` throws when no session is active.
 
 ```php
-use Duon\Session\Csrf;
-
-$csrf = new Csrf();
-$token = $csrf->get('contact');
+$token = $session->csrf->token('contact');
 ```
 
 Use the token in a form:
@@ -121,9 +118,9 @@ Use the token in a form:
 Verify submitted tokens on unsafe requests:
 
 ```php
-if (!$csrf->verify('contact')) {
+if (!$session->csrf->verify('contact')) {
     throw new RuntimeException('Invalid CSRF token');
 }
 ```
 
-`verify()` reads the token from the explicit argument, `$_POST['csrftoken']`, or the `HTTP_X_CSRF_TOKEN` server value.
+`Csrf` can also be used directly with `new Csrf($session)`. `verify()` reads the token from the explicit argument, `$_POST['csrftoken']`, or the `HTTP_X_CSRF_TOKEN` server value.

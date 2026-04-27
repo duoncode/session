@@ -13,19 +13,24 @@ class Csrf
 	 * @param non-empty-string $headerKey
 	 */
 	public function __construct(
-		protected string $sessionKey = 'csrftokens',
-		protected string $postKey = 'csrftoken',
-		protected string $headerKey = 'HTTP_X_CSRF_TOKEN',
+		private readonly Session $session,
+		private readonly string $sessionKey = 'csrftokens',
+		private readonly string $postKey = 'csrftoken',
+		private readonly string $headerKey = 'HTTP_X_CSRF_TOKEN',
 	) {
-		$this->assertActive();
 		$this->initStorage();
 	}
 
-	public function get(string $page = 'default'): string
+	public function token(string $page = 'default'): string
 	{
-		$this->assertActive();
+		$tokens = $this->tokens();
+		$token = $tokens[$page] ?? null;
 
-		return (string) ($_SESSION[$this->sessionKey][$page] ?? $this->set($page));
+		if (is_string($token)) {
+			return $token;
+		}
+
+		return $this->set($page);
 	}
 
 	public function verify(
@@ -33,8 +38,6 @@ class Csrf
 		#[\SensitiveParameter]
 		?string $token = null,
 	): bool {
-		$this->assertActive();
-
 		$token ??= $_POST[$this->postKey] ?? $_SERVER[$this->headerKey] ?? null;
 
 		if (!is_string($token)) {
@@ -45,7 +48,7 @@ class Csrf
 			return false;
 		}
 
-		$savedToken = $this->token($page);
+		$savedToken = $this->savedToken($page);
 
 		if ($savedToken === null) {
 			return false;
@@ -56,38 +59,48 @@ class Csrf
 
 	protected function set(string $page = 'default'): string
 	{
-		$this->assertActive();
-
-		assert(
-			array_key_exists($this->sessionKey, $_SESSION ?? []) && is_array($_SESSION[$this->sessionKey]),
-			'CSRF token storage must be an array.',
-		);
-
+		$tokens = $this->tokens();
 		$token = base64_encode(random_bytes(32));
-		$_SESSION[$this->sessionKey][$page] = $token;
+		$tokens[$page] = $token;
+		$this->session->set($this->sessionKey, $tokens);
 
 		return $token;
 	}
 
-	private function token(string $page): ?string
+	private function savedToken(string $page): ?string
 	{
-		/** @psalm-suppress MixedAssignment */
-		$token = $_SESSION[$this->sessionKey][$page] ?? null;
+		$tokens = $this->tokens();
+		$token = $tokens[$page] ?? null;
 
 		return is_string($token) ? $token : null;
 	}
 
 	private function initStorage(): void
 	{
-		if (($_SESSION[$this->sessionKey] ?? null) === null) {
-			$_SESSION[$this->sessionKey] = [];
+		if (!$this->session->has($this->sessionKey)) {
+			$this->session->set($this->sessionKey, []);
 		}
 	}
 
-	private function assertActive(): void
+	/** @return array<array-key, string> */
+	private function tokens(): array
 	{
-		if (session_status() !== PHP_SESSION_ACTIVE) {
-			throw new RuntimeException('Session not started');
+		/** @psalm-suppress MixedAssignment */
+		$tokens = $this->session->get($this->sessionKey, []);
+
+		if (!is_array($tokens)) {
+			return [];
 		}
+
+		$valid = [];
+
+		/** @psalm-suppress MixedAssignment */
+		foreach ($tokens as $page => $token) {
+			if (is_string($token)) {
+				$valid[$page] = $token;
+			}
+		}
+
+		return $valid;
 	}
 }

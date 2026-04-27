@@ -21,7 +21,6 @@ Start here: [docs/index.md](docs/index.md).
 ## Quick start
 
 ```php
-use Duon\Session\Csrf;
 use Duon\Session\Session;
 
 $session = new Session(options: [
@@ -34,8 +33,7 @@ $userId = $session->get('user_id');
 
 $session->flash->add('Signed in.');
 
-$csrf = new Csrf();
-$token = $csrf->get('profile');
+$token = $session->csrf->token('profile');
 ```
 
 `Session` merges custom options with secure defaults for HttpOnly cookies, SameSite=Lax, strict session IDs, cookie-only session IDs, disabled transparent session IDs, and PHP's `nocache` session cache limiter. Set `cookie_secure` to `true` for HTTPS deployments.

@@ -25,9 +25,17 @@ class Session
 	/** @psalm-suppress UnusedProperty Used by the $flash property hook. */
 	private ?Flash $flashInstance = null;
 
+	/** @psalm-suppress UnusedProperty Used by the $csrf property hook. */
+	private ?Csrf $csrfInstance = null;
+
 	/** @psalm-suppress PropertyNotSetInConstructor Virtual property backed by a get hook. */
 	public Flash $flash {
 		get => $this->flashInstance ??= new Flash($this);
+	}
+
+	/** @psalm-suppress PropertyNotSetInConstructor Virtual property backed by a get hook. */
+	public Csrf $csrf {
+		get => $this->csrfInstance ??= new Csrf($this);
 	}
 
 	public function __construct(

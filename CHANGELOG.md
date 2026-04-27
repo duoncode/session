@@ -4,6 +4,7 @@
 
 ### Added
 
+- `Session::$csrf` property for CSRF token access.
 - `Flash::peek()` and `Flash::clear()` helpers.
 - `Session::$flash` property for flash message access.
 - `Session::close()` to write the current session data and close the active session.
@@ -13,6 +14,7 @@
 
 ### Breaking
 
+- CSRF tokens now use `$session->csrf->token()` or `new Csrf($session)` instead of `new Csrf()` and `Csrf::get()`.
 - Flash messages now use `$session->flash->add()`, `$session->flash->pop()`, and `$session->flash->has()` instead of direct `Session` methods.
 - `Session::forget()` has been replaced with `Session::destroy()`.
 - Remembered URI redirects now only return safe local paths.

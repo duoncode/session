@@ -31,12 +31,30 @@ final class CsrfTest extends TestCase
 		parent::tearDown();
 	}
 
-	public function testCsrfGetCreatesToken(): void
+	public function testCsrfTokenCreatesToken(): void
 	{
-		$csrf = new Csrf();
-		$token = $csrf->get();
+		$csrf = new Csrf($this->session);
+		$token = $csrf->token();
 
 		self::assertSame(44, strlen($token));
+		self::assertSame($token, $this->session->get('csrftokens')['default']);
+	}
+
+	public function testCsrfTokenReturnsExistingToken(): void
+	{
+		$csrf = new Csrf($this->session);
+		$token = $csrf->token();
+
+		self::assertSame($token, $csrf->token());
+	}
+
+	public function testCsrfTokenReplacesInvalidStorage(): void
+	{
+		$csrf = new Csrf($this->session);
+		$this->session->set('csrftokens', 'invalid');
+
+		$token = $csrf->token();
+
 		self::assertSame($token, $this->session->get('csrftokens')['default']);
 	}
 
@@ -47,13 +65,13 @@ final class CsrfTest extends TestCase
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Session not started');
 
-		new Csrf();
+		new Csrf($this->session);
 	}
 
 	public function testCsrfVerifyPost(): void
 	{
-		$csrf = new Csrf();
-		$token = $csrf->get();
+		$csrf = new Csrf($this->session);
+		$token = $csrf->token();
 
 		$_POST['csrftoken'] = $token;
 
@@ -66,8 +84,8 @@ final class CsrfTest extends TestCase
 
 	public function testCsrfVerifyHeader(): void
 	{
-		$csrf = new Csrf();
-		$token = $csrf->get();
+		$csrf = new Csrf($this->session);
+		$token = $csrf->token();
 
 		$_SERVER['HTTP_X_CSRF_TOKEN'] = $token;
 
@@ -84,8 +102,8 @@ final class CsrfTest extends TestCase
 
 	public function testCsrfVerifyEmptySession(): void
 	{
-		$csrf = new Csrf();
-		$token = $csrf->get();
+		$csrf = new Csrf($this->session);
+		$token = $csrf->token();
 
 		$_SERVER['HTTP_X_CSRF_TOKEN'] = $token;
 		$_SESSION['csrftokens']['default'] = '';
@@ -95,8 +113,8 @@ final class CsrfTest extends TestCase
 
 	public function testCsrfVerifyEmptyToken(): void
 	{
-		$csrf = new Csrf();
-		$csrf->get();
+		$csrf = new Csrf($this->session);
+		$csrf->token();
 
 		$_POST['csrftoken'] = '';
 		self::assertFalse($csrf->verify());
@@ -107,24 +125,24 @@ final class CsrfTest extends TestCase
 
 	public function testCsrfVerifyTokenNull(): void
 	{
-		$csrf = new Csrf();
+		$csrf = new Csrf($this->session);
 
 		self::assertFalse($csrf->verify());
 	}
 
 	public function testCsrfVerifyDoesNotCreateToken(): void
 	{
-		$csrf = new Csrf();
+		$csrf = new Csrf($this->session);
 
 		self::assertFalse($csrf->verify('missing', 'submitted'));
 		self::assertArrayNotHasKey('missing', $_SESSION['csrftokens']);
 	}
 
-	public function testCsrfGetVerifyDifferentPage(): void
+	public function testCsrfTokenVerifyDifferentPage(): void
 	{
-		$csrf = new Csrf();
-		$tokenDefault = $csrf->get();
-		$tokenAlbums = $csrf->get('albums');
+		$csrf = new Csrf($this->session);
+		$tokenDefault = $csrf->token();
+		$tokenAlbums = $csrf->token('albums');
 
 		$_POST['csrftoken'] = $tokenDefault;
 
