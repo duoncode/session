@@ -142,7 +142,7 @@ class Session
 
 	public function active(): bool
 	{
-		return session_status() == PHP_SESSION_ACTIVE;
+		return session_status() === PHP_SESSION_ACTIVE;
 	}
 
 	public function regenerate(): void
