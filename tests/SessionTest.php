@@ -149,6 +149,17 @@ final class SessionTest extends TestCase
 		self::assertSame('default', $flashes[0]['queue']);
 	}
 
+	public function testFlashMessagesAreReturnedRaw(): void
+	{
+		$this->session->start();
+		$this->session->flash('<strong>Saved</strong>', 'alerts&info');
+
+		$flashes = $this->session->popFlashes();
+
+		self::assertSame('<strong>Saved</strong>', $flashes[0]['message']);
+		self::assertSame('alerts&info', $flashes[0]['queue']);
+	}
+
 	public function testPopFlashesQueueReturnsEmptyWhenUnset(): void
 	{
 		unset($_SESSION[Session::FLASH]);

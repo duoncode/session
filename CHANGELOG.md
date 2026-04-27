@@ -14,6 +14,7 @@
 - Custom session handler registration now throws when setup fails.
 - Sessions now use PHP's `nocache` cache limiter by default. Set `cache_limiter` to `''` to disable PHP cache headers.
 - CSRF helpers now throw when used without an active session.
+- Flash messages are now stored and returned as raw strings. Escape them at render time.
 
 ### Fixed
 

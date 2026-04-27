@@ -71,7 +71,7 @@ $messages = $session->popFlashes();
 $errors = $session->popFlashes('error');
 ```
 
-Flash messages are escaped with `htmlspecialchars()` when stored.
+Flash messages are stored as raw strings. Escape messages when rendering them into HTML.
 
 ## Remembered URI
 

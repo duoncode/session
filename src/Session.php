@@ -177,16 +177,16 @@ class Session
 
 		if (array_key_exists(self::FLASH, $_SESSION ?? []) && is_array($_SESSION[self::FLASH])) {
 			$_SESSION[self::FLASH][] = [
-				'message' => htmlspecialchars($message),
-				'queue' => htmlspecialchars($queue),
+				'message' => $message,
+				'queue' => $queue,
 			];
 
 			return;
 		}
 
 		$_SESSION[self::FLASH] = [[
-			'message' => htmlspecialchars($message),
-			'queue' => htmlspecialchars($queue),
+			'message' => $message,
+			'queue' => $queue,
 		]];
 	}
 
