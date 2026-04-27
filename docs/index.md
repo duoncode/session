@@ -85,7 +85,7 @@ return $session->rememberedUri();
 
 ## CSRF tokens
 
-Start the session before creating or verifying CSRF tokens.
+Start the session before creating or verifying CSRF tokens. `Csrf` throws when no session is active.
 
 ```php
 use Duon\Session\Csrf;

@@ -5,25 +5,49 @@ declare(strict_types=1);
 namespace Duon\Session\Tests;
 
 use Duon\Session\Csrf;
+use Duon\Session\RuntimeException;
 use Duon\Session\Session;
 
 final class CsrfTest extends TestCase
 {
+	private Session $session;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->session = new Session();
+		$this->session->start();
+	}
+
 	protected function tearDown(): void
 	{
 		unset($_POST['csrftoken'], $_SERVER['HTTP_X_CSRF_TOKEN'], $_SESSION['csrftokens']);
+
+		if ($this->session->active()) {
+			$this->session->forget();
+		}
 
 		parent::tearDown();
 	}
 
 	public function testCsrfGetCreatesToken(): void
 	{
-		$session = new Session();
 		$csrf = new Csrf();
 		$token = $csrf->get();
 
 		self::assertSame(44, strlen($token));
-		self::assertSame($token, $session->get('csrftokens')['default']);
+		self::assertSame($token, $this->session->get('csrftokens')['default']);
+	}
+
+	public function testCsrfRequiresActiveSession(): void
+	{
+		$this->session->forget();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Session not started');
+
+		new Csrf();
 	}
 
 	public function testCsrfVerifyPost(): void

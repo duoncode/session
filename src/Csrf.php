@@ -17,13 +17,14 @@ class Csrf
 		protected string $postKey = 'csrftoken',
 		protected string $headerKey = 'HTTP_X_CSRF_TOKEN',
 	) {
-		if (($_SESSION[$this->sessionKey] ?? null) === null) {
-			$_SESSION[$this->sessionKey] = [];
-		}
+		$this->assertActive();
+		$this->initStorage();
 	}
 
 	public function get(string $page = 'default'): string
 	{
+		$this->assertActive();
+
 		return (string) ($_SESSION[$this->sessionKey][$page] ?? $this->set($page));
 	}
 
@@ -32,6 +33,8 @@ class Csrf
 		#[\SensitiveParameter]
 		?string $token = null,
 	): bool {
+		$this->assertActive();
+
 		$token ??= $_POST[$this->postKey] ?? $_SERVER[$this->headerKey] ?? null;
 
 		if (!is_string($token)) {
@@ -53,6 +56,8 @@ class Csrf
 
 	protected function set(string $page = 'default'): string
 	{
+		$this->assertActive();
+
 		assert(
 			array_key_exists($this->sessionKey, $_SESSION ?? []) && is_array($_SESSION[$this->sessionKey]),
 			'CSRF token storage must be an array.',
@@ -62,5 +67,19 @@ class Csrf
 		$_SESSION[$this->sessionKey][$page] = $token;
 
 		return $token;
+	}
+
+	private function initStorage(): void
+	{
+		if (($_SESSION[$this->sessionKey] ?? null) === null) {
+			$_SESSION[$this->sessionKey] = [];
+		}
+	}
+
+	private function assertActive(): void
+	{
+		if (session_status() !== PHP_SESSION_ACTIVE) {
+			throw new RuntimeException('Session not started');
+		}
 	}
 }
