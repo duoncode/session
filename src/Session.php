@@ -179,7 +179,7 @@ class Session
 	{
 		if ($queue === null) {
 			$flashes = $_SESSION[self::FLASH];
-			assert(is_array($flashes));
+			assert(is_array($flashes), 'Flash storage must be an array.');
 			$_SESSION[self::FLASH] = [];
 		} else {
 			if (!is_array($_SESSION[self::FLASH] ?? null)) {
@@ -194,8 +194,8 @@ class Session
 			$flashes = [];
 
 			foreach ($flashMessages as $flash) {
-				assert(($flash['queue'] ?? null) !== null);
-				assert(($flash['message'] ?? null) !== null);
+				assert(($flash['queue'] ?? null) !== null, 'Flash queue must exist.');
+				assert(($flash['message'] ?? null) !== null, 'Flash message must exist.');
 
 				if ($flash['queue'] === $queue) {
 					$flashes[] = $flash;

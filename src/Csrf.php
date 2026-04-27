@@ -57,7 +57,7 @@ class Csrf
 
 	protected function set(string $page = 'default'): string
 	{
-		assert(is_array($_SESSION[$this->sessionKey] ?? null));
+		assert(is_array($_SESSION[$this->sessionKey] ?? null), 'CSRF token storage must be an array.');
 
 		$token = base64_encode(random_bytes(32));
 		$_SESSION[$this->sessionKey][$page] = $token;
