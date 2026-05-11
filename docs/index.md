@@ -1,17 +1,17 @@
-# Duon Sessions
+# Celemas Sessions
 
-Duon Sessions wraps native PHP sessions and provides a small CSRF helper.
+Celemas Sessions wraps native PHP sessions and provides a small CSRF helper.
 
 ## Installation
 
 ```bash
-composer require duon/session
+composer require celemas/session
 ```
 
 ## Start a session
 
 ```php
-use Duon\Session\Session;
+use Celemas\Session\Session;
 
 $session = new Session();
 $session->start();
@@ -52,14 +52,14 @@ Call `$session->close()` after your last session read or write to write the curr
 
 ## Custom helpers
 
-`$session->flash`, `$session->csrf`, and `$session->uri` are created lazily through `Duon\Session\Contract\Helpers`. Pass a custom implementation when you need custom helper classes or storage keys:
+`$session->flash`, `$session->csrf`, and `$session->uri` are created lazily through `Celemas\Session\Contract\Helpers`. Pass a custom implementation when you need custom helper classes or storage keys:
 
 ```php
-use Duon\Session\Contract\Helpers as HelpersContract;
-use Duon\Session\Csrf;
-use Duon\Session\Flash;
-use Duon\Session\Session;
-use Duon\Session\Uri;
+use Celemas\Session\Contract\Helpers as HelpersContract;
+use Celemas\Session\Csrf;
+use Celemas\Session\Flash;
+use Celemas\Session\Session;
+use Celemas\Session\Uri;
 
 final class AppHelpers implements HelpersContract
 {
@@ -176,7 +176,7 @@ $session->csrf->remove('contact');
 ```php
 $csrf = new Csrf(
     $session,
-    key: 'duon_csrf_tokens',
+    key: 'celemas_csrf_tokens',
     field: '_token',
     header: 'X-CSRF-Token',
 );
