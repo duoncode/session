@@ -4,7 +4,7 @@
 		colors="true"
 		cacheDirectory=".phpunit.cache">
 	<testsuites>
-		<testsuite name="Duon Session Test Suite">
+		<testsuite name="Celemas Session Test Suite">
 			<directory suffix="Test.php">tests</directory>
 		</testsuite>
 	</testsuites>
