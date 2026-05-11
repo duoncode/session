@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session;
+namespace Celemas\Session;
 
 /** @api */
 class Csrf
@@ -14,7 +14,7 @@ class Csrf
 	 */
 	public function __construct(
 		private readonly Session $session,
-		private readonly string $key = 'duon_csrf_tokens',
+		private readonly string $key = 'celemas_csrf_tokens',
 		private readonly string $field = '_token',
 		private readonly string $header = 'X-CSRF-Token',
 	) {

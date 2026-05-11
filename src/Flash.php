@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session;
+namespace Celemas\Session;
 
 /** @api */
 class Flash
 {
-	public const string STORAGE = 'duon_flash_messages';
+	public const string STORAGE = 'celemas_flash_messages';
 
 	/** @param non-empty-string $key */
 	public function __construct(

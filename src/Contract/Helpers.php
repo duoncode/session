@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session\Contract;
+namespace Celemas\Session\Contract;
 
-use Duon\Session\Csrf;
-use Duon\Session\Flash;
-use Duon\Session\Session;
-use Duon\Session\Uri;
+use Celemas\Session\Csrf;
+use Celemas\Session\Flash;
+use Celemas\Session\Session;
+use Celemas\Session\Uri;
 
 /** @api */
 interface Helpers

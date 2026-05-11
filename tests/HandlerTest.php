@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session {
+namespace Celemas\Session {
 	function session_set_save_handler($handler, $registerShutdown = true): bool
 	{
-		return \Duon\Session\Tests\HandlerTest::sessionSetSaveHandlerResult(
+		return \Celemas\Session\Tests\HandlerTest::sessionSetSaveHandlerResult(
 			$handler,
 			$registerShutdown,
 		);
 	}
 }
 
-namespace Duon\Session\Tests {
-	use Duon\Session\RuntimeException;
-	use Duon\Session\Session;
+namespace Celemas\Session\Tests {
+	use Celemas\Session\RuntimeException;
+	use Celemas\Session\Session;
 
 	final class HandlerTest extends TestCase
 	{

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session;
+namespace Celemas\Session;
 
 /** @api */
 final class Helpers implements Contract\Helpers

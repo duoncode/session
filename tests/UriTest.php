@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session\Tests;
+namespace Celemas\Session\Tests;
 
-use Duon\Session\RuntimeException;
-use Duon\Session\Session;
-use Duon\Session\Uri;
+use Celemas\Session\RuntimeException;
+use Celemas\Session\Session;
+use Celemas\Session\Uri;
 
 final class UriTest extends TestCase
 {

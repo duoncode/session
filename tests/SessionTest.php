@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session\Tests;
+namespace Celemas\Session\Tests;
 
-use Duon\Session\Contract\Helpers as HelpersContract;
-use Duon\Session\Csrf;
-use Duon\Session\Flash;
-use Duon\Session\OutOfBoundsException;
-use Duon\Session\RuntimeException;
-use Duon\Session\Session;
-use Duon\Session\Uri;
+use Celemas\Session\Contract\Helpers as HelpersContract;
+use Celemas\Session\Csrf;
+use Celemas\Session\Flash;
+use Celemas\Session\OutOfBoundsException;
+use Celemas\Session\RuntimeException;
+use Celemas\Session\Session;
+use Celemas\Session\Uri;
 
 final class SessionTest extends TestCase
 {

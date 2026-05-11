@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session\Tests;
+namespace Celemas\Session\Tests;
 
-use Duon\Session\Csrf;
-use Duon\Session\RuntimeException;
-use Duon\Session\Session;
+use Celemas\Session\Csrf;
+use Celemas\Session\RuntimeException;
+use Celemas\Session\Session;
 
 final class CsrfTest extends TestCase
 {
@@ -28,7 +28,7 @@ final class CsrfTest extends TestCase
 			$_SERVER['HTTP_X_CSRF_TOKEN'],
 			$_SERVER['HTTP_X_APP_CSRF'],
 			$_SERVER['HTTP_X_SERVER_CSRF'],
-			$_SESSION['duon_csrf_tokens'],
+			$_SESSION['celemas_csrf_tokens'],
 			$_SESSION['tokens'],
 			$_SESSION['server_tokens'],
 		);
@@ -46,7 +46,7 @@ final class CsrfTest extends TestCase
 		$token = $csrf->token();
 
 		self::assertSame(44, strlen($token));
-		self::assertSame($token, $this->session->get('duon_csrf_tokens')['default']);
+		self::assertSame($token, $this->session->get('celemas_csrf_tokens')['default']);
 	}
 
 	public function testCsrfTokenReturnsExistingToken(): void
@@ -60,11 +60,11 @@ final class CsrfTest extends TestCase
 	public function testCsrfTokenReplacesInvalidStorage(): void
 	{
 		$csrf = new Csrf($this->session);
-		$this->session->set('duon_csrf_tokens', 'invalid');
+		$this->session->set('celemas_csrf_tokens', 'invalid');
 
 		$token = $csrf->token();
 
-		self::assertSame($token, $this->session->get('duon_csrf_tokens')['default']);
+		self::assertSame($token, $this->session->get('celemas_csrf_tokens')['default']);
 	}
 
 	public function testCsrfRequiresActiveSession(): void
@@ -99,7 +99,7 @@ final class CsrfTest extends TestCase
 		$csrf->remove('albums');
 
 		self::assertFalse($csrf->verify('albums', $token));
-		self::assertArrayNotHasKey('albums', $this->session->get('duon_csrf_tokens'));
+		self::assertArrayNotHasKey('albums', $this->session->get('celemas_csrf_tokens'));
 	}
 
 	public function testCsrfVerifyPost(): void
@@ -170,7 +170,7 @@ final class CsrfTest extends TestCase
 		$token = $csrf->token();
 
 		$_SERVER['HTTP_X_CSRF_TOKEN'] = $token;
-		$_SESSION['duon_csrf_tokens']['default'] = '';
+		$_SESSION['celemas_csrf_tokens']['default'] = '';
 
 		self::assertFalse($csrf->verify());
 	}
@@ -199,7 +199,7 @@ final class CsrfTest extends TestCase
 		$csrf = new Csrf($this->session);
 
 		self::assertFalse($csrf->verify('missing', 'submitted'));
-		self::assertArrayNotHasKey('missing', $_SESSION['duon_csrf_tokens']);
+		self::assertArrayNotHasKey('missing', $_SESSION['celemas_csrf_tokens']);
 	}
 
 	public function testCsrfTokenVerifyDifferentPage(): void

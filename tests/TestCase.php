@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session\Tests;
+namespace Celemas\Session\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use SessionHandler;

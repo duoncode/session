@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session;
+namespace Celemas\Session;
 
 /** @api */
 class Uri
 {
-	public const string REMEMBERED = 'duon_remembered_uri';
+	public const string REMEMBERED = 'celemas_remembered_uri';
 
 	/** @param non-empty-string $key */
 	public function __construct(

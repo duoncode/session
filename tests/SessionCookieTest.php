@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session {
+namespace Celemas\Session {
 	function setcookie(...$args): bool
 	{
-		return \Duon\Session\Tests\SessionCookieTest::setCookieResult($args);
+		return \Celemas\Session\Tests\SessionCookieTest::setCookieResult($args);
 	}
 }
 
-namespace Duon\Session\Tests {
-	use Duon\Session\Session;
+namespace Celemas\Session\Tests {
+	use Celemas\Session\Session;
 
 	final class SessionCookieTest extends TestCase
 	{

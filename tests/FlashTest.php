@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session\Tests;
+namespace Celemas\Session\Tests;
 
-use Duon\Session\Flash;
-use Duon\Session\RuntimeException;
-use Duon\Session\Session;
+use Celemas\Session\Flash;
+use Celemas\Session\RuntimeException;
+use Celemas\Session\Session;
 
 final class FlashTest extends TestCase
 {

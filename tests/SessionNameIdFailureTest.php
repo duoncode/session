@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Duon\Session {
+namespace Celemas\Session {
 	function session_name(?string $name = null): string|false
 	{
 		if ($name !== null) {
 			return \session_name($name);
 		}
 
-		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionNameResult();
+		return \Celemas\Session\Tests\SessionNameIdFailureTest::sessionNameResult();
 	}
 
 	function session_id(?string $id = null): string|false
@@ -18,28 +18,30 @@ namespace Duon\Session {
 			return \session_id($id);
 		}
 
-		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionIdResult();
+		return \Celemas\Session\Tests\SessionNameIdFailureTest::sessionIdResult();
 	}
 
 	function session_regenerate_id($deleteOldSession = false): bool
 	{
-		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionRegenerateIdResult($deleteOldSession);
+		return \Celemas\Session\Tests\SessionNameIdFailureTest::sessionRegenerateIdResult(
+			$deleteOldSession,
+		);
 	}
 
 	function session_write_close(): bool
 	{
-		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionWriteCloseResult();
+		return \Celemas\Session\Tests\SessionNameIdFailureTest::sessionWriteCloseResult();
 	}
 
 	function session_destroy(): bool
 	{
-		return \Duon\Session\Tests\SessionNameIdFailureTest::sessionDestroyResult();
+		return \Celemas\Session\Tests\SessionNameIdFailureTest::sessionDestroyResult();
 	}
 }
 
-namespace Duon\Session\Tests {
-	use Duon\Session\RuntimeException;
-	use Duon\Session\Session;
+namespace Celemas\Session\Tests {
+	use Celemas\Session\RuntimeException;
+	use Celemas\Session\Session;
 
 	final class SessionNameIdFailureTest extends TestCase
 	{
