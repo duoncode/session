@@ -1,26 +1,26 @@
 {
-	"name": "duon/session",
-	"description": "Duon session library",
+	"name": "celemas/session",
+	"description": "Celemas session library",
 	"type": "library",
 	"license": "MIT",
-	"homepage": "https://duon.sh/session",
+	"homepage": "https://celemas.dev/session",
 	"keywords": [
 		"sessions"
 	],
 	"authors": [
 		{
 			"name": "Ernst",
-			"email": "ernst@duon.sh"
+			"email": "ernst@celemas.dev"
 		}
 	],
 	"autoload": {
 		"psr-4": {
-			"Duon\\Session\\": "src/"
+			"Celemas\\Session\\": "src/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Duon\\Session\\Tests\\": "tests"
+			"Celemas\\Session\\Tests\\": "tests"
 		}
 	},
 	"require": {
@@ -28,7 +28,7 @@
 		"ext-random": "*"
 	},
 	"require-dev": {
-		"duon/dev": "^3.0"
+		"celemas/dev": "^3.0"
 	},
 	"scripts": {
 		"test": "./vendor/bin/phpunit --testdox --no-coverage --colors=always",
