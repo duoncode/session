@@ -1,17 +1,16 @@
-# Duon Sessions
+# Celemas Sessions
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/83e066774ea24c5da4b7ac855797c439)](https://app.codacy.com/gh/duoncode/session/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/83e066774ea24c5da4b7ac855797c439)](https://app.codacy.com/gh/duoncode/session/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
-[![Psalm level](https://shepherd.dev/github/duoncode/session/level.svg?)](https://duon.sh/session)
-[![Psalm coverage](https://shepherd.dev/github/duoncode/session/coverage.svg?)](https://shepherd.dev/github/duoncode/session)
+[![CI](https://github.com/celemas/session/actions/workflows/ci.yml/badge.svg)](https://github.com/celemas/session/actions)
+[![Psalm level](https://shepherd.dev/github/celemas/session/level.svg?)](https://celemas.dev/session)
+[![Psalm coverage](https://shepherd.dev/github/celemas/session/coverage.svg?)](https://shepherd.dev/github/celemas/session)
 
 Helper classes for native PHP sessions, flash messages, and CSRF.
 
 ## Installation
 
 ```bash
-composer require duon/session
+composer require celemas/session
 ```
 
 ## Documentation
@@ -21,7 +20,7 @@ Start here: [docs/index.md](docs/index.md).
 ## Quick start
 
 ```php
-use Duon\Session\Session;
+use Celemas\Session\Session;
 
 $session = new Session();
 $session->start();
