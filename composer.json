@@ -28,12 +28,13 @@
 		"ext-random": "*"
 	},
 	"require-dev": {
-		"celemas/dev": "^3.0"
+		"celemas/dev": "^4.1"
 	},
 	"scripts": {
 		"test": "./vendor/bin/phpunit --testdox --no-coverage --colors=always",
 		"types": "./vendor/bin/psalm --no-cache",
-		"mdlint": "markdownlint-cli2 README.md CHANGELOG.md LICENSE.md docs/",
+		"docs:format": "npx prettier@3.6.2 --write --config ./docs/.prettierrc README.md CHANGELOG.md LICENSE.md docs/",
+		"docs:lint": "npx markdownlint-cli2@0.22.1 --config ./vendor/celemas/dev/config/markdownlint.jsonc README.md CHANGELOG.md LICENSE.md docs/",
 		"coverage": [
 			"./vendor/bin/phpunit --testdox --path-coverage --coverage-text --coverage-php=.coverage/cover.php --colors=always",
 			"./vendor/bin/coverlyzer .coverage/cover.php"
@@ -41,7 +42,7 @@
 		"ci": [
 			"composer coverage",
 			"composer types",
-			"composer mdlint"
+			"composer docs:lint"
 		]
 	}
 }
