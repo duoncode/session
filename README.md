@@ -1,9 +1,12 @@
 # Celemas Sessions
 
+<!-- prettier-ignore-start -->
+[![ci](https://github.com/celemas/session/actions/workflows/ci.yml/badge.svg)](https://github.com/celemas/session/actions)
+[![codecov](https://codecov.io/github/celemas/session/graph/badge.svg?token=PFMO1BE0FD)](https://codecov.io/github/celemas/session)
+[![psalm coverage](https://shepherd.dev/github/celemas/session/coverage.svg?)](https://shepherd.dev/github/celemas/session)
+[![psalm level](https://shepherd.dev/github/celemas/session/level.svg?)](https://shepherd.dev/github/celemas/session)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![CI](https://github.com/celemas/session/actions/workflows/ci.yml/badge.svg)](https://github.com/celemas/session/actions)
-[![Psalm level](https://shepherd.dev/github/celemas/session/level.svg?)](https://celemas.dev/session)
-[![Psalm coverage](https://shepherd.dev/github/celemas/session/coverage.svg?)](https://shepherd.dev/github/celemas/session)
+<!-- prettier-ignore-end -->
 
 Helper classes for native PHP sessions, flash messages, and CSRF.
 
